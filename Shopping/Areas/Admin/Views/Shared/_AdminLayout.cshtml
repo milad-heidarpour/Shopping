@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title</title>
+
+    <link href="~/Lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+    
+    
+</head>
+<body dir="rtl">
+    
+    
+
+    <a asp-area="admin" asp-controller="brand" asp-action="index">برند ها</a> ||| 
+    <a asp-area="admin" asp-controller="commodity" asp-action="index">کالا ها</a> ||| 
+    <a asp-area="admin" asp-controller="productclassification" asp-action="index">دسته بندی کالا ها</a> ||| 
+    <a asp-area="admin" asp-controller="feature" asp-action="index">ویژگی ها</a> ||| 
+    <a asp-area="" asp-controller="account" asp-action="logout">خروج</a> ||| 
+    @* <partial name="~/Areas/Admin/Views/Admin/ProfileInfoPartial.cshtml"  /> *@
+    <div>
+        @RenderBody()
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    @* <script>
+        window.onload = function () {
+            $.ajax({
+                url: "/admin/admin/index",
+                type: "Get",
+                data: {},
+                success: function (result) {
+                    $("#side-bar").html(result);
+                    CheckSidBar();
+                }
+            });
+    </script> *@
+</body>
+</html>

@@ -1,0 +1,116 @@
+﻿@model IEnumerable<Shopping.Database.Model.Brand>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="CreateBrand">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BrandEnName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BrandFaName)
+            </th>
+            @* <th>
+                @Html.DisplayNameFor(model => model.BrandDes)
+            </th> *@
+            <th>
+                @Html.DisplayNameFor(model => model.BrandImg)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NotShow)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BrandEnName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BrandFaName)
+                </td>
+               @*<td>
+                    @Html.DisplayFor(modelItem => item.BrandDes)
+                </td> *@
+                <th>
+                    @*  @Html.DisplayNameFor(model => model.BrandImg) *@
+                    @{
+                        if (item.BrandImg != null)
+                        {
+                            <img src="~/Images/Brand/@item.BrandImg" width="110">
+                            
+                        }
+                        else
+                        {
+                            @Html.DisplayNameFor(model => model.BrandImg)
+                        }
+                        
+                    }
+                    
+                </th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NotShow)
+                </td>
+                <td>
+                    <a asp-action="EditBrandTitel" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="BrandDetails" asp-route-id="@item.Id">Details</a> |
+                    <a data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="DeleteBrand('@(item.Id)')" class="btn btn-danger"><span class="fa fa-trash-o"></span></a> |
+                    <a asp-action="EditBrandImg" asp-route-id="@item.Id">Edit IMG</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title text-center fs-5" id="exampleModalLabel">حذف کردن برند</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="modalBody" class="modal-body">
+                ...
+            </div>
+            @*<div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    const myModal = document.getElementById('myModal')
+    const myInput = document.getElementById('myInput')
+
+    myModal.addEventListener('shown.bs.modal', () => {
+        myInput.focus()
+    })
+    function DeleteBrand(BrandId) {
+        $.ajax({
+            url: '/admin/brand/delete',
+            type: 'get',
+            data: {/*controller parameter*/  id: BrandId /*send parameter*/ },
+            success: (result) => {
+                document.getElementById('modalBody').innerHTML = result;
+            }
+        })
+    }
+
+</script>

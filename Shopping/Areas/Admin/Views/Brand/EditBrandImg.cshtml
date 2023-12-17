@@ -1,0 +1,74 @@
+﻿@model Shopping.Core.ViewModels.EditBrandViewModel
+
+@{
+    ViewData["Title"] = "EditBrandImg";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>EditBrandImg</h1>
+
+<h4>Brand</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditBrandImg" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" readonly/>
+
+            <img src="~/Images/Brand/@Model.BrandImg" width="250" class="rounded-3 bg-white">
+            >>>>>>>
+
+            <div class="form-group">
+                <label asp-for="BrandEnName" class="control-label"></label>
+                <input asp-for="BrandEnName" class="form-control" readonly/>
+                <span asp-validation-for="BrandEnName" class="text-danger" ></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BrandFaName" class="control-label" hidden></label>
+                <input asp-for="BrandFaName" class="form-control"  type="hidden" readonly/>
+                <span asp-validation-for="BrandFaName" class="text-danger" hidden></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BrandDes" class="control-label" hidden></label>
+                <input asp-for="BrandDes" class="form-control"  type="hidden"/>
+                <span asp-validation-for="BrandDes" class="text-danger" hidden></span>
+            </div>
+            <div class="form-group">
+                <br />
+                <input type="file" name="BrandImg" onchange="ImgPreview(this)" accept=".jpg,.png" />
+                <img id="Brand-preview" src="" width="256" />
+                <label asp-for="BrandImg" class="control-label"></label>
+                <input asp-for="BrandImg" value="@Model.BrandImg" id="img-name" class="form-control" />
+                <span asp-validation-for="BrandImg" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label" hidden>
+                    <input class="form-check-input" asp-for="NotShow"  type="hidden" readonly/> @Html.DisplayNameFor(model => model.NotShow)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    function ImgPreview(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                let img = document.getElementById('Brand-preview');
+                img.setAttribute('src', e.target.result);
+
+                document.getElementById('img-name').value = input.files[0].name;
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Index</h1>
+
+<a asp-area="admin" asp-controller="feature" asp-action="AddFeatureGroup">افزودن گروه ثبت ویژگی</a> \\\\
+<a asp-area="admin" asp-controller="feature" asp-action="AddFeatureSection">افزودن قسمت ثبت ویژگی</a> \\\\
+<a asp-area="admin" asp-controller="feature" asp-action="AddFeature">افزودن ویژگی</a>\\\\
+<hr style="opacity: 20" class="text-danger" />
+@* <a asp-area="admin" asp-controller="feature" asp-action="addallfeatures" class="btn btn-outline-success">افرودن ویژگی ها</a>//////////// *@
+<a asp-controller="feature" asp-action="GetFeatureGroups" class="btn btn-info">featureGroups</a>////////////
+<a asp-controller="feature" asp-action="GetFeatureSections" class="btn btn-info">featureSections</a>////////////
+<a asp-controller="feature" asp-action="GetFeatures" class="btn btn-info">features</a>////////////
+<hr style="opacity: 20" class="text-danger" />
+<partial name="FeatureGroupsPartial.cshtml" model="@ViewBag.FeatureGroups" />
+@* <hr style="opacity: 20" class="text-danger" />
+<partial name="FeatureSectionsPartial.cshtml" model="@ViewBag.FeatureSections" />
+<hr style="opacity: 20" class="text-danger " />
+<partial name="FeaturesPartial.cshtml" model="@ViewBag.Features" /> *@
+
+
+

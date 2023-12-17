@@ -1,0 +1,73 @@
+﻿@model Shopping.Core.ViewModels.EditClassificationViewModel
+
+@{
+    ViewData["Title"] = "EditClassificationImg";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>EditClassificationImg</h1>
+
+<h4>ProductClassification</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditClassificationImg" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" readonly />
+
+            <img src="~/Images/ProductClassification/@Model.GroupImg" width="250" class="rounded-3 bg-white">
+            >>>>>>>
+            <div class="form-group">
+                <label asp-for="GroupEnName" class="control-label"></label>
+                <input asp-for="GroupEnName" class="form-control" readonly />
+                <span asp-validation-for="GroupEnName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GroupFaName" class="control-label"></label>
+                <input asp-for="GroupFaName" class="form-control" readonly />
+                <span asp-validation-for="GroupFaName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <br />
+                <input type="file" name="ClassificationImg" onchange="ImgPreview(this)" accept=".jpg,.png" />
+                <img id="Brand-preview" src="" width="256" />
+                <label asp-for="GroupImg" class="control-label"></label>
+                <input asp-for="GroupImg" value="@Model.GroupImg" id="img-name" class="form-control" />
+                <span asp-validation-for="GroupImg" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GroupDes" class="control-label"></label>
+                <input type="text" asp-for="GroupDes" class="form-control" readonly />
+                <span asp-validation-for="GroupDes" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="NotShow" hidden readonly/> @Html.DisplayNameFor(model => model.NotShow)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    function ImgPreview(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                let img = document.getElementById('Brand-preview');
+                img.setAttribute('src', e.target.result);
+
+                document.getElementById('img-name').value = input.files[0].name;
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

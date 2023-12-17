@@ -1,0 +1,113 @@
+﻿@model IEnumerable<Shopping.Database.Model.ProductClassification>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="CreateClassification">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupEnName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupFaName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupImg)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupDes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NotShow)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GroupEnName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GroupFaName)
+                </td>
+                <td>
+                    @*  @Html.DisplayFor(modelItem => item.GroupImg) *@
+                    <img src="~/Images/ProductClassification/@item.GroupImg" width="50">
+                </td>
+                <td>
+                    @* if group des==null write هیچ توضیحاتی وجود ندارد *@
+                    @{
+                        if (item.GroupDes == null)
+                        {
+                            <h6><span class="fa fa-times text-danger"></span>توضیحاتی وجود ندارد<span class="fa fa-times text-danger"></span></h6>
+                        }
+                        @Html.DisplayFor(modelItem => item.GroupDes)
+                    }
+                    
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NotShow)
+                </td>
+                <td>
+                    <a asp-action="EditClassificationTitle" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="EditClassificationImg" asp-route-id="@item.Id">Edit Image</a> |
+                    <a asp-action="ClassificationDetails" asp-route-id="@item.Id">Details</a> |
+                    <a data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="DeleteClassification('@(item.Id)')" class="btn btn-danger"><span class="fa fa-trash-o"></span></a> |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title text-center fs-5" id="exampleModalLabel">حذف کردن طبقه بندی</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="modalBody" class="modal-body">
+                ...
+            </div>
+            @*<div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    const myModal = document.getElementById('myModal')
+    const myInput = document.getElementById('myInput')
+
+    myModal.addEventListener('shown.bs.modal', () => {
+        myInput.focus()
+    })
+    function DeleteClassification(ClassificationId) {
+        $.ajax({
+            url: '/admin/productclassification/deleteclassification',
+            type: 'get',
+            data: {/*controller parameter*/  id: ClassificationId /*send parameter*/ },
+            success: (result) => {
+                document.getElementById('modalBody').innerHTML = result;
+            }
+        })
+    }
+
+</script>

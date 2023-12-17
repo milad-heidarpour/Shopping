@@ -1,0 +1,90 @@
+﻿@model IEnumerable<Shopping.Database.Model.CommodityAlbum>
+
+@{
+    if (Model.Count() == 0)
+    {
+        <h1>عکسی برای این محصول وجود ندارد</h1>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    @* <th>
+            @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.CommodityId)
+            </th> *@
+                    <th>
+                        @Html.DisplayNameFor(model => model.CommodityImg)
+                    </th>
+                    @* <th></th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @*  <td>
+            @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.CommodityId)
+            </td> *@
+                        <td>
+                            @* @Html.DisplayFor(modelItem => item.CommodityImg) *@
+                            <img src="~/Images/commodity/@item.CommodityImg " width="210">
+                        </td>
+
+                        <td>
+                            @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@
+                            @* <a asp-action="RemoveCommodityAlbum" asp-route-id="@item.Id">Delete</a>*@
+                            <a data-bs-toggle="modal" data-bs-target="#exampleModal1" onclick="DeleteImg('@(item.Id)')" class="btn btn-danger"><span class="fa fa-trash-o"></span></a> |
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title text-center fs-5" id="exampleModalLabel">حذف کردن عکس</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="modalBody" class="modal-body">
+                ...
+            </div>
+            @*<div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    const myModal = document.getElementById('myModal')
+    const myInput = document.getElementById('myInput')
+
+    myModal.addEventListener('shown.bs.modal', () => {
+        myInput.focus()
+    })
+    function DeleteImg(CommodityId) {
+        $.ajax({
+            url: '/admin/commodity/RemoveCommodityAlbum',
+            type: 'get',
+            data: {/*controller parameter*/  Id: CommodityId /*send parameter*/ },
+            success: (result) => {
+                document.getElementById('modalBody').innerHTML = result;
+            }
+        })
+    }
+
+</script>

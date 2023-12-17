@@ -1,0 +1,89 @@
+﻿@model Shopping.Database.Model.CommodityAlbum
+
+@{
+    ViewData["Title"] = "AddCommodityAlbum";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    if (ViewBag.Message != null)
+    {
+        TempData["msg"] = "<script>alert('دوباره امتحان کنید');</script>";
+        @Html.Raw(TempData["msg"])
+
+        <h1 class="text-danger"><span class="fa fa-times text-danger"></span>@ViewBag.Message<span class="fa fa-times text-danger"></span></h1>
+    }
+}
+
+
+<partial name="CommodityDetailPartial.cshtml" model="@ViewBag.Commodity" />
+
+
+<partial name="CommodityAlbumPartial.cshtml" model="@ViewBag.Album" />
+<hr />
+
+@* اینجا هم باید مثل بالا یه پارشیال درست کنم که اطلاعات محصول را نشان دهد توی یه باکس *@
+
+@* <h1>افزودن عکس برای محصول</h1>
+@{
+    var commodity = ViewBag.Commodity;
+}
+
+<h5>@commodity.ProductFaName</h5>
+<h5>@commodity.ProductEnName</h5>
+<h5>@commodity.Brand.BrandEnName</h5>
+<h5>@commodity.Price</h5>
+<h5>@commodity.Discount</h5>
+<h5>@commodity.Inventory</h5>
+<h5>@commodity.RegisterDate</h5> *@
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddCommodityAlbum" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" hidden>
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" value="@ViewBag.Id" class="form-control" readonly hidden />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group" hidden>
+                <label asp-for="CommodityId" class="control-label"></label>
+                <input asp-for="CommodityId" class="form-control" value="@ViewBag.CommodityId" readonly hidden/>
+            </div>
+            <div class="form-group">
+                <label asp-for="CommodityImg" class="control-label"></label>
+                <br />
+                <input type="file" name="CommodityImg" onchange="ImgPreview(this)" accept=".jpg,.png" />
+                <img id="Product-preview" src="" width="256" />
+                <input asp-for="CommodityImg" id="img-name" class="form-control"  readonly hidden/>
+                <span asp-validation-for="CommodityImg" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    function ImgPreview(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                let img = document.getElementById('Product-preview');
+                img.setAttribute('src', e.target.result);
+
+                document.getElementById('img-name').value = input.files[0].name;
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Shopping.Database.Model.CommodityAlbum>
+
+@{
+    if (Model.Count() == 0)
+    {
+        <h1>عکسی برای این محصول وجود ندارد</h1>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    @* <th>
+            @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.CommodityId)
+            </th> *@
+                    <th>
+                        @Html.DisplayNameFor(model => model.CommodityImg)
+                    </th>
+                    @* <th></th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @*  <td>
+            @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.CommodityId)
+            </td> *@
+                        <td>
+                            @* @Html.DisplayFor(modelItem => item.CommodityImg) *@
+                            <img src="~/Images/commodity/@item.CommodityImg " width="210">
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}

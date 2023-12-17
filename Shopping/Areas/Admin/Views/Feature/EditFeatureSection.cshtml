@@ -1,0 +1,37 @@
+﻿@model Shopping.Database.Model.FeatureSection
+
+@{
+    ViewData["Title"] = "EditFeatureSection";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>EditFeatureSection</h1>
+
+<h4>FeatureSection</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditFeatureSection">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="FeatureGroupId" class="control-label"></label>
+                <select asp-for="FeatureGroupId" class="form-control" asp-items="ViewBag.FeatureGroupId"></select>
+                <span asp-validation-for="FeatureGroupId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SectionName" class="control-label"></label>
+                <input asp-for="SectionName" class="form-control" />
+                <span asp-validation-for="SectionName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Shopping.Database.Model.FeatureSection>
+
+
+@{
+    ViewData["Title"] = "FeatureSectionPartial";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<h1> قسمت ویژگی</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <span class="bi bi-sort-alpha-down fa-lg"></span>
+                @Html.DisplayNameFor(model => model.FeatureGroup)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SectionName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+               
+                <td>
+                    @Html.DisplayFor(modelItem => item.FeatureGroup.GroupName)
+                </td>
+                <td>
+
+                    @Html.DisplayFor(modelItem => item.SectionName)
+                </td>
+                <td>
+                    <a asp-action="EditFeatureSection" asp-route-id="@item.Id" class="btn btn-warning"><span class="bi bi bi-pen"></span></a> |
+                    <a asp-action="FeatureSectionDetails" asp-route-id="@item.Id" class="btn btn-info"><span class="bi bi-info-square"></span></a> |
+                    <a data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="DeleteFeatureSection('@(item.Id)')" class="btn btn-danger"><span class="bi bi-trash"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="modalBody" class="modal-body">
+                ...
+            </div>
+            @*<div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    const myModal = document.getElementById('myModal')
+    const myInput = document.getElementById('myInput')
+
+    myModal.addEventListener('shown.bs.modal', () => {
+        myInput.focus()
+    })
+    function DeleteFeatureSection(FeatureSectionId) {
+        $.ajax({
+            url: '/admin/feature/FeatureSectionDelete',
+            type: 'get',
+            data: {/*controller parameter*/  id: FeatureSectionId /*send parameter*/ },
+            success: (result) => {
+                document.getElementById('modalBody').innerHTML = result;
+            }
+        })
+    }
+
+</script>

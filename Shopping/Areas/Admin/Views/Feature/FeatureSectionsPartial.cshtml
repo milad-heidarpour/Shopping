@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Shopping.Database.Model.FeatureSection>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SectionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FeatureGroup)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SectionName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FeatureGroup.GroupName)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

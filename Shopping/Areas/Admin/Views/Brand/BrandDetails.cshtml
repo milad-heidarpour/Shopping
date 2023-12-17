@@ -1,0 +1,57 @@
+﻿@model Shopping.Database.Model.Brand
+
+@{
+    ViewData["Title"] = "BrandDetails";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>BrandDetails</h1>
+
+<div>
+    <h4>Brand</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BrandEnName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.BrandEnName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BrandFaName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.BrandFaName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BrandDes)
+        </dt>
+        <dd class = "col-sm-10">
+            @{
+                if (Model.BrandDes==null)
+                {
+                    <h6><span class="fa fa-times text-danger"></span>توضیحاتی وجود ندارد<span class="fa fa-times text-danger"></span></h6>
+                }
+                @Html.DisplayFor(model => model.BrandDes)
+            }
+            
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BrandImg)
+        </dt>
+        <dd class = "col-sm-10">
+            @* @Html.DisplayFor(model => model.BrandImg) *@
+            <img src="~/images/brand/@Model.BrandImg" width="500"/>
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NotShow)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NotShow)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="EditBrandTitel" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

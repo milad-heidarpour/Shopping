@@ -1,0 +1,74 @@
+﻿@model Shopping.Database.Model.ProductClassification
+
+@{
+    ViewData["Title"] = "CreateClassification";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>CreateClassification</h1>
+
+<h4>ProductClassification</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateClassification" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" value="@ViewBag.ClassificationId" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GroupEnName" class="control-label"></label>
+                <input asp-for="GroupEnName" class="form-control" />
+                <span asp-validation-for="GroupEnName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GroupFaName" class="control-label"></label>
+                <input asp-for="GroupFaName" class="form-control" />
+                <span asp-validation-for="GroupFaName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GroupImg" class="control-label"></label>
+                <br />
+                <input type="file" name="ClsfLogo" onchange="ImgPreview(this)" accept=".jpg,.png" />
+                <img id="Product-preview" src="" width="256" />
+                <input asp-for="GroupImg" id="img-name" class="form-control" />
+                <span asp-validation-for="GroupImg" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GroupDes" class="control-label"></label>
+                <input asp-for="GroupDes" class="form-control" />
+                <span asp-validation-for="GroupDes" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="NotShow" /> @Html.DisplayNameFor(model => model.NotShow)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    function ImgPreview(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                let img = document.getElementById('Product-preview');
+                img.setAttribute('src', e.target.result);
+
+                document.getElementById('img-name').value = input.files[0].name;
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
