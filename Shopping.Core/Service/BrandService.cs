@@ -11,7 +11,7 @@ namespace Shopping.Core.Service;
 
 public class BrandService : IBrand
 {
-    string imgPath = "wwwroot/images/brand";
+    string imgPath = "wwwroot/Images/Brand";
     private readonly DatabaseContext _context;
     public BrandService(DatabaseContext context)
     {

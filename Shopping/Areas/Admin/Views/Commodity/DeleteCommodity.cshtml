@@ -1,0 +1,28 @@
+﻿@model Shopping.Database.Model.Commodity
+
+<div>
+    @{
+        if (Model.CommodityAlbums.Count()==0)
+        {
+            <h5 class="text-danger text-center"><span class=" fa fa-times"></span> عکسی برای محصول وجود ندارد <span class=" fa fa-times"></span></h5>
+        }
+        else
+        {
+            foreach (var item in ViewBag.CommodityAlbum)
+            {
+                <img src="~/Images/commodity/@item.CommodityImg" width="113" />
+            }
+        }
+       
+    }
+    
+    <h6>ProductName : @Model.ProductEnName</h6>
+    <h6>نام کالا : @Model.ProductFaName</h6>
+    <hr />
+    <h4 class="text-danger text-center">آیا حذف  میکنید؟</h4>
+    <form asp-area="Admin" asp-controller="Commodity" asp-action="DeleteCommodity" class="text-center">
+        <input asp-for="Id" hidden />
+        <button class ="btn btn-success">بله <span class="bi bi-check2-circle fa-lg"></span></button>
+        <a asp-area="Admin" asp-controller="Commodity" asp-action="Index" class="btn btn-danger">خیر <span class=" bi bi-x-circle fa-lg"></span></a>
+    </form>
+</div>

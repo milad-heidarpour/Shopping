@@ -60,8 +60,12 @@ public class Commodity
     [Display(Name = "تاریخ ثبت کالا")]
     public string? RegisterDate { get; set; }
 
-    //[Display(Name ="تاریخ بروزرسانی")]
-    //public string? UpdateDate { get; set; };
+    [Display(Name ="تاریخ بروزرسانی")]
+    public string? UpdateDate { get; set; }=null;
+
+    //[Display(Name ="تعداد فروخته شده")]
+    //public int SellCount { get; set; }
+
 
 
     [ForeignKey(nameof(BrandId))]

@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="AddFeatureGroup">
+        <form asp-area="Admin" asp-controller="Feature" asp-action="AddFeatureGroup">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="GroupName" class="control-label"></label>
@@ -26,6 +26,9 @@
 </div>
 <hr style="opacity: 20" class="text-danger " />
 <partial name="FeatureGroupsPartial.cshtml" model="@ViewBag.FeatureGroups" />
+<hr style="opacity: 20" class="text-danger " />
+<partial name="FeaturesChartPartial.cshtml" model="@ViewBag.AllFeatures" />
+
 <hr style="opacity: 20" class="text-danger " />
 <div>
     <a asp-action="Index">Back to List</a>

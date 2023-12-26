@@ -65,7 +65,7 @@ public class FeatureService : IFeature
         try
         {
             var feature = await _context.Features.FindAsync(Id);
-            if (feature!=null)
+            if (feature != null)
             {
                 _context.Features.Remove(feature);
                 await _context.SaveChangesAsync();
@@ -140,7 +140,7 @@ public class FeatureService : IFeature
         catch (Exception)
         {
             return await Task.FromResult(false);
-           // throw;
+            // throw;
         }
     }
 
@@ -177,14 +177,19 @@ public class FeatureService : IFeature
 
     public async Task<Feature> GetFeature(int Id)
     {
-        var feature = await _context.Features.Include(f=>f.FeatureSection).FirstOrDefaultAsync(f => f.Id == Id);
+        var feature = await _context.Features.Include(f => f.FeatureSection).FirstOrDefaultAsync(f => f.Id == Id);
         return await Task.FromResult(feature);
     }
 
     public async Task<FeatureGroup> GetFeatureGroup(int Id)
     {
-        var featureGroup = await _context.FeatureGroups.FindAsync(Id);
-        return await Task.FromResult(featureGroup);
+
+        var featureGroup = await _context.FeatureGroups.Include(f=>f.FeatureSections).FirstOrDefaultAsync(f=>f.Id==Id);
+        if (featureGroup != null)
+        {
+            return await Task.FromResult(featureGroup);
+        }
+        return null;
     }
 
     public async Task<List<FeatureGroup>> GetFeatureGroups()
@@ -201,7 +206,7 @@ public class FeatureService : IFeature
 
     public async Task<FeatureSection> GetFeatureSection(int Id)
     {
-        var featureSection = await _context.FeatureSections.Include(f=>f.FeatureGroup).FirstOrDefaultAsync(f=>f.Id==Id);
+        var featureSection = await _context.FeatureSections.Include(f => f.FeatureGroup).FirstOrDefaultAsync(f => f.Id == Id);
         return await Task.FromResult(featureSection);
     }
 

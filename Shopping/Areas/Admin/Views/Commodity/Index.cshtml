@@ -8,7 +8,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-area="Admin" asp-controller="Commodity" asp-action="AddNewCommodity" class="btn btn-success"><span class="bi bi-patch-plus"> Create</span></a>
 </p>
 <table class="table">
     <thead>
@@ -36,6 +36,9 @@
             </th>
             @*  <th>
             @Html.DisplayNameFor(model => model.RegisterDate)
+            </th> *@
+            @*  <th>
+            @Html.DisplayNameFor(model => model.UpdateDate)
             </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.Brand.BrandImg)
@@ -84,8 +87,11 @@
                 @* <td>
             @Html.DisplayFor(modelItem => item.RegisterDate)
             </td> *@
+                @* <td>
+            @Html.DisplayFor(modelItem => item.UpdateDate)
+            </td> *@
                 <td>
-                    @Html.DisplayFor(modelItem => item.Brand.BrandEnName)
+                    @* @Html.DisplayFor(modelItem => item.Brand.BrandEnName) *@
                     <img src="~/Images/Brand/@item.Brand.BrandImg" width="50">
                 </td>
                 <td>
@@ -93,11 +99,12 @@
                     <img src="~/Images/ProductClassification/@item.Group.GroupImg" width="50">
                 </td>
                 <td>
-                    <a asp-action="EditCommodity" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="CommodityDetails" asp-route-id="@item.Id">Details</a> |
+                    <a asp-area="Admin" asp-controller="Commodity" asp-action="EditCommodity" asp-route-id="@item.Id" class="btn btn-warning"><span class="bi bi bi-pen"></span></a> |
+                    <a asp-area="Admin" asp-controller="Commodity" asp-action="CommodityDetails" asp-route-id="@item.Id" class="btn btn-info"><span class="bi bi-info-square"></span></a> |
                     <a data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="DeleteCommodity('@(item.Id)')" class="btn btn-danger"><span class="fa fa-trash-o"></span></a> |
                     @* <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> | *@
-                    <a asp-action="AddCommodityAlbum" asp-route-id="@item.Id">Album</a>
+                    <a asp-area="Admin" asp-controller="Commodity" asp-action="AddCommodityAlbum" asp-route-id="@item.Id" class="btn btn-dark"><span class="bi bi-images"></span></a> |
+                    <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@item.Id" class="btn btn-light"><span class="bi bi-input-cursor"></span></a> |
                 </td>
             </tr>
         }
@@ -135,7 +142,7 @@
     })
     function DeleteCommodity(CommodityId) {
         $.ajax({
-            url: '/admin/commodity/removecommodity',
+            url: '/Admin/Commodity/DeleteCommodity',
             type: 'get',
             data: {/*controller parameter*/  Id: CommodityId /*send parameter*/ },
             success: (result) => {

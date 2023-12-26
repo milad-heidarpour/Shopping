@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Shopping.Core.Interface;
+using Shopping.Core.ViewModels;
 using Shopping.Database.Model;
 using System.Drawing.Drawing2D;
 using System.Security.Policy;
@@ -11,7 +12,7 @@ namespace Shopping.Areas.Admin.Controllers;
 [Area("Admin")]
 public class CommodityController : Controller
 {
-    string imgPath = "wwwroot/images/commodity";
+    string imgPath = "wwwroot/Images/Commodity";
     ICommodity _commodity;
     IBrand _brand;
     IClassification _classification;
@@ -26,9 +27,25 @@ public class CommodityController : Controller
         var commodities = await _commodity.GetCommodities(/*ClassificationId:Guid.Empty,*/);
         return View(commodities);
     }
+    //public async Task<IActionResult> GetCommodities()
+    //{
+    //    //var Id1 = TempData["Id1"];
+    //    //var Id2 = TempData["Id2"];
+    //    //var Id3 = TempData["Id3"];
+    //    //var Id4 = TempData["Id4"];
+    //    var commodities = await _commodity.GetCommodities(/*ClassificationId:Guid.Empty,*/);
+
+    //    CompareViewModel compareView = new CompareViewModel()
+    //    {
+    //        Commodities = commodities,
+    //    };
 
 
-    public async Task<IActionResult> Create()
+    //    return await Task.FromResult( View(commodities));
+    //}
+
+
+    public async Task<IActionResult> AddNewCommodity()
     {
         ViewBag.BrandCount = (await _brand.GetBrands()).Count();
         ViewBag.ClassificationCount = (await _classification.GetProductClassifications()).Count();
@@ -40,7 +57,7 @@ public class CommodityController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Commodity commodity)
+    public async Task<IActionResult> AddNewCommodity(Commodity commodity)
     {
         if (ModelState.IsValid)
         {
@@ -91,7 +108,7 @@ public class CommodityController : Controller
         }
 
         TempData["Message"] = "دوباره امتحان کنید";
-        return RedirectToAction(nameof(AddCommodityAlbum), new { id = album.CommodityId});
+        return RedirectToAction(nameof(AddCommodityAlbum), new { id = album.CommodityId });
 
         //ModelState.AddModelError("CommodityImg", "خطا در ثبت محصول");
         //ViewBag.Album = await _commodity.GetCommodityAlbums(album.CommodityId);
@@ -139,7 +156,7 @@ public class CommodityController : Controller
     }
 
 
-    public async Task<IActionResult> RemoveCommodity(Guid Id)
+    public async Task<IActionResult> DeleteCommodity(Guid Id)
     {
         var commodity = await _commodity.GetCommodity(Id);
         ViewBag.CommodityAlbum = (await _commodity.GetCommodityAlbums(Id)).Take(4);
@@ -152,7 +169,7 @@ public class CommodityController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> RemoveCommodity(Commodity commodity)
+    public async Task<IActionResult> DeleteCommodity(Commodity commodity)
     {
         var commoDetails = await _commodity.GetCommodity(commodity.Id);
         if (commoDetails != null)
@@ -197,4 +214,140 @@ public class CommodityController : Controller
         ViewBag.ClassificationId = new SelectList(await _classification.GetProductClassifications(), "Id", "GroupEnName");
         return await Task.FromResult(View(commodity));
     }
+
+    public async Task<IActionResult> CompareCommodities(Guid Id1, Guid? Id2, Guid? Id3, Guid? Id4, Guid? DeleteId)
+    {
+
+        var commodity1 = await _commodity.GetCommodity(Id1);
+        var commodity2 = await _commodity.GetCommodity(Id2);
+        var commodity3 = await _commodity.GetCommodity(Id3);
+        var commodity4 = await _commodity.GetCommodity(Id4);
+
+        TempData["Id1"] = Id1;
+        TempData["Id2"] = Id2;
+        TempData["Id3"] = Id3;
+        TempData["Id4"] = Id4;
+
+        if (DeleteId != null)
+        {
+            if (Id2 == DeleteId)
+            {
+                Id2 = null;
+                TempData["Id1"] = Id1;
+                TempData["Id2"] = Id2;
+                TempData["Id3"] = Id3;
+                TempData["Id4"] = Id4;
+                var commodities = await _commodity.NoDupCommodities(DupId1: Id1, DupId2: Id2, DupId3: Id3, DupId4: Id4, notShow: false);
+                CompareViewModel CompareDelete = new CompareViewModel()
+                {
+                    Commodity1 = commodity1,
+                    Commodity2 = null,
+                    Commodity3 = commodity3,
+                    Commodity4 = commodity4,
+                    Commodities = commodities,
+                };
+                return await Task.FromResult(View(CompareDelete));
+            }
+            else if (Id3 == DeleteId)
+            {
+                Id3 = null;
+                TempData["Id1"] = Id1;
+                TempData["Id2"] = Id2;
+                TempData["Id3"] = Id3;
+                TempData["Id4"] = Id4;
+                var commodities = await _commodity.NoDupCommodities(DupId1: Id1, DupId2: Id2, DupId3: Id3, DupId4: Id4, notShow: false);
+                CompareViewModel CompareDelete = new CompareViewModel()
+                {
+                    Commodity1 = commodity1,
+                    Commodity2 = commodity2,
+                    Commodity3 = null,
+                    Commodity4 = commodity4,
+                    Commodities = commodities
+                };
+                return await Task.FromResult(View(CompareDelete));
+            }
+            else if (Id4 == DeleteId)
+            {
+                Id4 = null;
+                TempData["Id1"] = Id1;
+                TempData["Id2"] = Id2;
+                TempData["Id3"] = Id3;
+                TempData["Id4"] = Id4;
+                var commodities = await _commodity.NoDupCommodities(DupId1: Id1, DupId2: Id2, DupId3: Id3, DupId4: Id4, notShow: false);
+                CompareViewModel CompareDelete = new CompareViewModel()
+                {
+                    Commodity1 = commodity1,
+                    Commodity2 = commodity2,
+                    Commodity3 = commodity3,
+                    Commodity4 = null,
+                    Commodities = commodities
+                };
+                return await Task.FromResult(View(CompareDelete));
+            }
+        }
+        var commodities1 = await _commodity.NoDupCommodities(DupId1: Id1, DupId2: Id2, DupId3: Id3, DupId4: Id4, notShow: false);
+        CompareViewModel compareView = new CompareViewModel()
+        {
+            Commodity1 = commodity1,
+            Commodity2 = commodity2,
+            Commodity3 = commodity3,
+            Commodity4 = commodity4,
+            Commodities = commodities1
+        };
+
+        return await Task.FromResult(View(compareView));
+    }
+
+    //public async Task<IActionResult> CompareCommodities(Guid ? FId, Guid? SId)//Id==Commodityid
+    //{
+    //    //for (int i = 0; i < Id.Count(); i++)
+    //    //{
+    //    //    var commodity = await _commodity.GetCommodity(Id[i]);
+    //    //    List<Commodity> commodities = new List<Commodity>() { commodity };
+    //    //    ViewBag.Commodities = commodities;
+    //    //    TempData["FId"] = commodity.Id;
+    //    //}
+
+    //    if (FId!=null)
+    //    {
+    //        TempData["FId"] = FId;
+    //        var commodity1 = await _commodity.GetCommodity(FId);
+    //        ViewBag.CommodityFirst = commodity1;
+
+    //    }
+    //    if (SId != null)
+    //    {
+    //        TempData["SId"] = SId;
+    //        var commodity2 = await _commodity.GetCommodity(SId);
+    //        ViewBag.CommoditySecond = commodity2;
+    //    }
+
+    //    return await Task.FromResult(View());
+    //}
+
+
+
+
+    //public async Task<IActionResult> CompareCommodityTwo(Guid SId)//Id==Commodityid
+    //{
+
+    //    var commodity2 = await _commodity.GetCommodity(SId);
+    //    ViewBag.CommoditySecond = commodity2;
+
+    //    return View(commodity2);
+    //}
+    //public async Task<IActionResult> CompareCommodityOne(Guid Id)//Id==Commodityid
+    //{
+    //    var commodity=await _commodity.GetCommodity(Id);
+    //    ViewBag.CommodityFirst= commodity;
+    //    TempData["Commodity1"]= commodity;
+    //    return View();
+    //}
+    //public async Task<IActionResult> CompareCommodityTwo(Guid Id)//Id==Commodityid
+    //{
+    //    var commodity = await _commodity.GetCommodity(Id);
+    //    ViewBag.CommoditySecond = commodity;
+    //    TempData["Commodity2"] = commodity;
+    //    return RedirectToAction(nameof(CompareCommodities));
+    //}
 }

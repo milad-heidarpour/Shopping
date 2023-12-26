@@ -5,9 +5,9 @@
     <h5>نام عنوان ویژگی : @Model.Title</h5>
     <hr />
     <h4 class="text-danger text-center">آیا حذف  میکنید؟</h4>
-    <form asp-controller="Feature" asp-action="FeatureDelete" class="text-center">
+    <form asp-area="Admin" asp-controller="Feature" asp-action="FeatureDelete" class="text-center">
         <input asp-for="Id" hidden />
-        <button class="btn btn-success">بله</button>
-        <a asp-area="admin" asp-controller="feature" asp-action="GetFeatures" class="btn btn-outline-danger">خیر</a>
+        <button class="btn btn-success">بله <span class="bi bi-check2-circle fa-lg"></span></button>
+        <a asp-area="Admin" asp-controller="Feature" asp-action="GetFeatures" class="btn btn-danger">خیر <span class=" bi bi-x-circle fa-lg"></span></a>
     </form>
 </div>

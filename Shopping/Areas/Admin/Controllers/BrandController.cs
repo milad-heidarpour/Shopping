@@ -9,7 +9,7 @@ namespace Shopping.Areas.Admin.Controllers;
 public class BrandController : Controller
 {
     IBrand _brand;
-    string imgPath = "wwwroot/images/brand";
+    string imgPath = "wwwroot/Images/Brand";
 
     public BrandController(IBrand brand)
     {
@@ -18,11 +18,11 @@ public class BrandController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var brands = await _brand.GetBrands();
+        var brands = (await _brand.GetBrands()).OrderBy(f=>f.BrandEnName);
         return View(brands);
     }
 
-    public async Task<IActionResult> CreateBrand()
+    public async Task<IActionResult> CreateNewBrand()
     {
         ViewBag.BrandId = Guid.NewGuid();
         return await Task.FromResult(View());
@@ -31,7 +31,7 @@ public class BrandController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateBrand(Brand brand, IFormFile brandLogo)
+    public async Task<IActionResult> CreateNewBrand(Brand brand, IFormFile brandLogo)
     {
         if (ModelState.IsValid)
         {
@@ -133,7 +133,7 @@ public class BrandController : Controller
         return await Task.FromResult(View(viewModel));
     }
 
-    public async Task<IActionResult> Delete(Guid Id)//id==brandId
+    public async Task<IActionResult> DeleteBrand(Guid Id)//id==brandId
     {
         var brand = await _brand.GetBrand(Id);
         if (brand != null)
@@ -145,7 +145,7 @@ public class BrandController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(Brand brand)
+    public async Task<IActionResult> DeleteBrand(Brand brand)
     {
         var Previousimg = (await _brand.GetBrand(brand.Id)).BrandImg;
         if (await _brand.DeleteBrand(brand.Id))

@@ -6,9 +6,9 @@
     <h5>نام برند : @Model.GroupFaName</h5>
     <hr />
     <h4 class="text-danger text-center">آیا حذف  میکنید؟</h4>
-    <form asp-controller="productclassification" asp-action="DeleteClassification" class="text-center">
+    <form asp-area="Admin" asp-controller="ProductClassification" asp-action="DeleteClassification" class="text-center">
         <input asp-for="Id" hidden />
-        <button class="btn btn-success">بله</button>
-        <a asp-controller="productclassification" asp-action="index" class="btn btn-outline-danger">خیر</a>
+        <button class="btn btn-success">بله <span class="bi bi-check2-circle fa-lg"></span></button>
+        <a asp-area="Admin" asp-controller="ProductClassification" asp-action="Index" class="btn btn-danger">خیر <span class=" bi bi-x-circle fa-lg"></span></a>
     </form>
 </div>

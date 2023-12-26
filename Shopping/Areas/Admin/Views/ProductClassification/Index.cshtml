@@ -8,7 +8,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="CreateClassification">Create New</a>
+    <a asp-area="Admin" asp-controller="ProductClassification" asp-action="CreateClassification" class="btn btn-success"><span class="bi bi-patch-plus"> Create</span></a>
 </p>
 <table class="table">
     <thead>
@@ -60,10 +60,10 @@
                     @Html.DisplayFor(modelItem => item.NotShow)
                 </td>
                 <td>
-                    <a asp-action="EditClassificationTitle" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="EditClassificationImg" asp-route-id="@item.Id">Edit Image</a> |
-                    <a asp-action="ClassificationDetails" asp-route-id="@item.Id">Details</a> |
+                    <a asp-area="Admin" asp-controller="ProductClassification" asp-action="EditClassificationTitle" asp-route-id="@item.Id" class="btn btn-warning"><span class="bi bi bi-pen"></span></a> |
+                    <a asp-area="Admin" asp-controller="ProductClassification" asp-action="ClassificationDetails" asp-route-id="@item.Id" class="btn btn-info"><span class="bi bi-info-square"></span></a> |
                     <a data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="DeleteClassification('@(item.Id)')" class="btn btn-danger"><span class="fa fa-trash-o"></span></a> |
+                    <a asp-area="Admin" asp-controller="ProductClassification" asp-action="EditClassificationImg" asp-route-id="@item.Id" class="btn btn-dark"><span class="bi bi-images"></span></a> 
                 </td>
             </tr>
         }
@@ -101,7 +101,7 @@
     })
     function DeleteClassification(ClassificationId) {
         $.ajax({
-            url: '/admin/productclassification/deleteclassification',
+            url: '/admin/ProductClassification/DeleteClassification',
             type: 'get',
             data: {/*controller parameter*/  id: ClassificationId /*send parameter*/ },
             success: (result) => {

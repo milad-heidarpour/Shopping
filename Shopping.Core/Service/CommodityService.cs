@@ -9,30 +9,32 @@ namespace Shopping.Core.Service;
 
 public class CommodityService : ICommodity
 {
-    string imgPath = "wwwroot/images/commodity";
+    string imgPath = "wwwroot/Images/Commodity";
     private readonly DatabaseContext _context;
     public CommodityService(DatabaseContext context)
     {
         _context = context;
     }
 
-    public async Task<List<Commodity>> GetCommodities(/*Guid? ClassificationId,*/ bool? notShow = null)
+    public async Task<List<Commodity>> NoDupCommodities(Guid? DupId1 = null, Guid? DupId2 = null, Guid? DupId3 = null, Guid? DupId4 = null,  /*Guid? ClassificationId,*/ bool? notShow = null)
     {
-        var commodities = await _context.Commodities.Include(c=>c.Brand).Include(c=>c.Group).ToListAsync();
-        if (notShow != null)
-        {
-            return await Task.FromResult(commodities.Where(c => c.NotShow == notShow).ToList());
-        }
-        //if (ClassificationId!=null)
+        var commodity = await _context.Commodities.Include(f=>f.Group).Include(f=>f.Brand).Include(f=>f.CommodityAlbums).FirstOrDefaultAsync(f=>f.Id==DupId1);
+        var NoDupcommodities = await _context.Commodities.Where(f=>f.NotShow==notShow).Where(f => f.Id != DupId1).Where(f => f.Id != DupId2).Where(f => f.Id != DupId3).Where(f => f.Id != DupId4).Where(f => f.GroupId == commodity.GroupId).ToListAsync(); 
+        var commodities = await _context.Commodities.Include(c => c.Brand).Include(c => c.Group).Include(f => f.CommodityAlbums).ToListAsync();
+        //if (notShow != null)
+        //{
+        //    return await Task.FromResult(commodities.Where(c => c.NotShow == notShow).ToList());
+        //}
+        //if (ClassificationId != null)
         //{
         //    return await Task.FromResult(commodities.Where(c => c.Group.Id == ClassificationId).ToList());
         //}
-        return await Task.FromResult(commodities);
+        return await Task.FromResult(NoDupcommodities);
     }
 
-    public async Task<Commodity> GetCommodity(Guid CommodityId)
+    public async Task<Commodity> GetCommodity(Guid? CommodityId)
     {
-        var commodity = await _context.Commodities.Include(c=>c.Group).Include(c => c.Brand).Include(c=>c.CommodityAlbums).FirstOrDefaultAsync(c => c.Id == CommodityId);
+        var commodity = await _context.Commodities.Include(c => c.Group).Include(c => c.Brand).Include(c => c.CommodityAlbums).FirstOrDefaultAsync(c => c.Id == CommodityId);
         return await Task.FromResult(commodity);
     }
     public async Task<bool> AddCommodity(Commodity commodity)
@@ -52,7 +54,8 @@ public class CommodityService : ICommodity
                 Introduction = commodity.Introduction,
                 NotShow = commodity.NotShow,
                 RegisterDate = await new DateAndTime().GetPersianDate(),
-                Brand=commodity.Brand,
+                UpdateDate = null,
+                Brand = commodity.Brand,
             };
             await _context.Commodities.AddAsync(FinalCommo);
             await _context.SaveChangesAsync();
@@ -118,8 +121,8 @@ public class CommodityService : ICommodity
     {
         try
         {
-            var commodityAlbum = await _context.CommoditiesAlbum.Include(c=>c.Commodity).FirstOrDefaultAsync(c=>c.Id == CommodityId);
-            if (commodityAlbum != null) 
+            var commodityAlbum = await _context.CommoditiesAlbum.Include(c => c.Commodity).FirstOrDefaultAsync(c => c.Id == CommodityId);
+            if (commodityAlbum != null)
             {
                 _context.CommoditiesAlbum.Remove(commodityAlbum);
                 await _context.SaveChangesAsync();
@@ -140,7 +143,7 @@ public class CommodityService : ICommodity
         {
             var commodity = await _context.Commodities.Include(c => c.CommodityAlbums).Include(c => c.Brand).FirstOrDefaultAsync(c => c.Id == CommodityId);
             var album = commodity.CommodityAlbums;
-            if (commodity != null) 
+            if (commodity != null)
             {
                 _context.Commodities.Remove(commodity);
                 await _context.SaveChangesAsync();
@@ -179,7 +182,8 @@ public class CommodityService : ICommodity
                 Inventory = commodity.Inventory,
                 Introduction = commodity.Introduction,
                 NotShow = commodity.NotShow,
-                RegisterDate = await new DateAndTime().GetPersianDate(),
+                RegisterDate = commodity.RegisterDate,
+                UpdateDate = await new DateAndTime().GetPersianDate(),
                 //Brand = commodity.Brand,
                 //CommodityAlbums=commodity.CommodityAlbums,
             };
@@ -196,7 +200,21 @@ public class CommodityService : ICommodity
 
     public async Task<List<Commodity>> GetClassificationCommodities(Guid ClassificationId)
     {
-        var commodity=await _context.Commodities.Include(c=>c.CommodityAlbums).Include(c=>c.Brand).Include(c=>c.Group).Where(c=>c.Group.Id==ClassificationId).ToListAsync();
+        var commodity = await _context.Commodities.Include(c => c.CommodityAlbums).Include(c => c.Brand).Include(c => c.Group).Where(c => c.Group.Id == ClassificationId).ToListAsync();
         return await Task.FromResult(commodity);
+    }
+
+    public async Task<List<Commodity>> GetCommodities(bool? notShow = null)
+    {
+        var commodities = await _context.Commodities.Include(c => c.Brand).Include(c => c.Group).Include(f => f.CommodityAlbums).ToListAsync();
+        if (notShow != null)
+        {
+            return await Task.FromResult(commodities.Where(c => c.NotShow == notShow).ToList());
+        }
+        //if (ClassificationId != null)
+        //{
+        //    return await Task.FromResult(commodities.Where(c => c.Group.Id == ClassificationId).ToList());
+        //}
+        return await Task.FromResult(commodities);
     }
 }

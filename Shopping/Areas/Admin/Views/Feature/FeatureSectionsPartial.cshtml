@@ -1,27 +1,58 @@
 ﻿@model IEnumerable<Shopping.Database.Model.FeatureSection>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.SectionName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FeatureGroup)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+@{
+    if (Model.Count() > 0)
+    {
+        var groupName = Model.Select(f => f.FeatureGroup.GroupName).ToList();
+        var _groupDistinct = groupName.Distinct().ToList();
+        for (int i = 0; i < _groupDistinct.Count(); i++)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SectionName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FeatureGroup.GroupName)
-                </td>
-            </tr>
+            //<a asp-area="Admin" asp-controller="Feature" asp-action="FeatureGroupDetails" asp-route-GroupName="@_groupDistinct[i]" class="btn btn-info"> @_groupDistinct[i]</a>
+            <h1 class="text-dark"><span class="bi bi-asterisk text-bg-dark"></span>@_groupDistinct[i]</h1>
+
+            @foreach (var _sections in Model.Where(f => f.FeatureGroup.GroupName == _groupDistinct[i]))
+            {
+                //<a class="btn btn-warning me-1 m-1">@sections.SectionName</a>
+                <h5 class="text-success"><span class="bi bi-braces-asterisk text-bg-success"></span>@_sections.SectionName</h5>
+
+                @foreach (var _features in _sections.Features.Where(f => f.FeatureSection.SectionName == _sections.SectionName))
+                {
+                    //<a class="btn btn-danger">@item.Title</a>
+                    <h6 class="text-danger"><span class="bi bi-chevron-double-left text-bg-danger"></span>@_features.Title</h6>
+                }
+            }
         }
-    </tbody>
-</table>
+
+
+        // <table class="table">
+        //     <thead>
+        //         <tr>
+        //             <th>
+        //                 @Html.DisplayNameFor(model => model.SectionName)
+        //             </th>
+        //             <th>
+        //                 @Html.DisplayNameFor(model => model.FeatureGroup)
+        //             </th>
+        //             <th></th>
+        //         </tr>
+        //     </thead>
+        //     <tbody>
+        //         @foreach (var item in Model)
+        //         {
+        //             <tr>
+        //                 <td>
+        //                     @Html.DisplayFor(modelItem => item.SectionName)
+        //                 </td>
+        //                 <td>
+        //                     @Html.DisplayFor(modelItem => item.FeatureGroup.GroupName)
+        //                 </td>
+        //             </tr>
+        //         }
+        //     </tbody>
+        // </table>
+    }
+    else
+    {
+        <h1 class="text-danger">فعلا ویژگی برای این قسمت ثبت نشده است</h1>
+    }
+}
+

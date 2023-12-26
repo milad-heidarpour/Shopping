@@ -1,0 +1,54 @@
+﻿@model Shopping.Core.ViewModels.FeaturesChartViewModel
+
+
+@* @{
+    ViewData["Title"] = "FeaturesChart";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+} *@
+
+@{
+    if (Model.FeatureGroups.Count()>0)
+    {
+        <h1> نمودار ویژگی ها</h1>
+
+        <table class="table">
+            <tbody>
+                @{
+                    int ii = 1;
+                    int iii = 1;
+                    int iiii = 1;
+                    var _featureGroup = Model.FeatureGroups.ToList();
+                    for (int i = 0; i < _featureGroup.Count(); i++)
+                    {
+                    //<a asp-area="Admin" asp-controller="Feature" asp-action="FeatureGroupDetails" asp-route-GroupName="@_groupDistinct[i]" class="btn btn-info"> @_groupDistinct[i]</a>
+                        <a asp-area="Admin" asp-controller="Feature" asp-action="FeatureGroupDetails" asp-route-Id="@_featureGroup[i].Id" class="btn btn-danger me-1 mt-1"><span>(@ii)</span>@_featureGroup[i].GroupName</a>
+                        ii++;
+
+                        @foreach (var _featureSections in Model.FeatureSections.Where(f => f.FeatureGroup.GroupName == _featureGroup[i].GroupName))
+                        {
+                        //<a class="btn btn-warning me-1 m-1">@sections.SectionName</a>
+                            <a asp-area="Admin" asp-controller="Feature" asp-action="FeatureSectionDetails" asp-route-Id="@_featureSections.Id" class="btn btn-warning me-1 mt-1"><span>(@iii)</span>@_featureSections.SectionName</a>
+                            iii++;
+
+                            @foreach (var _features in _featureSections.Features.Where(f => f.FeatureSection.SectionName == _featureSections.SectionName))
+                            {
+                            //<a class="btn btn-danger">@item.Title</a>
+                                <a asp-area="Admin" asp-controller="Feature" asp-action="FeatureDetails" asp-route-Id="@_features.Id" class="btn btn-success me-1 mt-1"><span>(@iiii)</span>@_features.Title</a>
+                                iiii++;
+                            }
+                            iiii = 1;
+                        }
+                        iii = 1;
+                    }
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h1 class="text-danger">نمودار ویژگی ها خالی می باشد</h1>
+    }
+}
+
+
+

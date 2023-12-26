@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Shopping.Core.Interface;
+using Shopping.Core.ViewModels;
 using Shopping.Database.Model;
 
 namespace Shopping.Areas.Admin.Controllers;
@@ -16,12 +17,33 @@ public class FeatureController : Controller
     public async Task<IActionResult> Index()
     {
         #region GetAllFeatures
+        //for getting All Features Model
         ViewBag.FeatureGroups = (await _feature.GetFeatureGroups()).OrderBy(f => f.GroupName);
         //ViewBag.FeatureSections = (await _feature.GetFeatureSections()).OrderBy(f => f.FeatureGroup.GroupName);
         //ViewBag.Features = (await _feature.GetFeatures()).OrderBy(f => f.FeatureSection.SectionName);
         #endregion
 
         return await Task.FromResult(View());
+    }
+
+
+
+    //برای این ویو نساختم چون پارشیال گرفتم باید به یه اسم دیگه برای نمودار ویژگی ویو بسازم
+    public async Task<IActionResult> FeaturesChart()
+    {
+        #region FEATURES CHART
+        //for getting FeaturesChart
+        var featureGroups = (await _feature.GetFeatureGroups()).OrderBy(f => f.GroupName);
+        var featureSections = (await _feature.GetFeatureSections()).OrderBy(f => f.FeatureGroup.GroupName);
+        var features = (await _feature.GetFeatures()).OrderBy(f => f.FeatureSection.SectionName);
+        FeaturesChartViewModel featuresChart = new FeaturesChartViewModel()
+        {
+            FeatureGroups = featureGroups,
+            FeatureSections = featureSections,
+            Features = features,
+        };
+        #endregion
+        return await Task.FromResult(View(featuresChart));
     }
 
     //public async Task<IActionResult> AddAllFeatures()
@@ -44,14 +66,29 @@ public class FeatureController : Controller
         return await Task.FromResult(View(feature));
     }
 
-    public async Task<IActionResult> GetFeatureSectionsByFeatureGroup(int Id)//id==FeatureGroupId
-    {
-        var feature = (await _feature.RelatedFeatureSections(Id)).OrderBy(f => f.SectionName);
-        return await Task.FromResult(View(feature));
-    }
+    //public async Task<IActionResult> GetFeatureSectionsByFeatureGroup(int Id)//id==FeatureGroupId
+    //{
+    //    var feature = (await _feature.RelatedFeatureSections(Id)).OrderBy(f => f.SectionName);
+    //    return await Task.FromResult(View(feature));
+    //}
     public async Task<IActionResult> AddFeatureGroup()
     {
+        //just for getting FeaturesGroup
         ViewBag.FeatureGroups = (await _feature.GetFeatureGroups()).OrderBy(f => f.GroupName);
+
+        #region FEATURES CHART
+        //for getting FeaturesChart
+        var featureGroups = (await _feature.GetFeatureGroups()).OrderBy(f => f.GroupName);
+        var featureSections = (await _feature.GetFeatureSections()).OrderBy(f => f.FeatureGroup.GroupName);
+        var features = (await _feature.GetFeatures()).OrderBy(f => f.FeatureSection.SectionName);
+        FeaturesChartViewModel featuresChart = new FeaturesChartViewModel()
+        {
+            FeatureGroups = featureGroups,
+            FeatureSections = featureSections,
+            Features = features,
+        };
+        ViewBag.AllFeatures = featuresChart;
+        #endregion
         return await Task.FromResult(View());
     }
 
@@ -92,14 +129,28 @@ public class FeatureController : Controller
         return RedirectToAction(nameof(GetFeatureGroups));
     }
 
-    public async Task<IActionResult> FeatureGroupDetails(int Id)
+    public async Task<IActionResult> FeatureGroupDetails(int Id/*, string? GroupName*/)
     {
+        //if (Id != null)
+        //{
         var feature = await _feature.GetFeatureGroup(Id);
         if (feature != null)
         {
-            ViewBag.RelatedFeatureSections = await _feature.RelatedFeatureSections(Id);
+            ViewBag.FeatureGroups = (await _feature.GetFeatureGroups()).OrderBy(f => f.GroupName);
+            ViewBag.RelatedFeatureSections = await _feature.RelatedFeatureSections(feature.Id);
             return await Task.FromResult(View(feature));
         }
+        //}
+        //if (GroupName != null)
+        //{
+        //    var feature = await _feature.GetFeatureGroup(Id: null, GroupName: GroupName);
+        //    if (feature != null)
+        //    {
+        //        ViewBag.RelatedFeatureSections = await _feature.RelatedFeatureSections(feature.Id);
+        //        return await Task.FromResult(View(feature));
+        //    }
+        //}
+
         return RedirectToAction(nameof(Index));
     }
 
@@ -133,10 +184,29 @@ public class FeatureController : Controller
         return await Task.FromResult(View(feature));
     }
 
+
     public async Task<IActionResult> AddFeatureSection()
     {
+        //for Selecte GroupFeature To Add FeatureSection
         ViewBag.FeatureGroupId = new SelectList((await _feature.GetFeatureGroups()).OrderBy(f => f.GroupName), "Id", "GroupName");
+
+        //just for getting FeatureSections
         ViewBag.FeatureSections = (await _feature.GetFeatureSections()).OrderBy(f => f.FeatureGroup.GroupName);
+
+        #region FEATURES CHART
+        //for getting FeaturesChart
+        var featureGroups = (await _feature.GetFeatureGroups()).OrderBy(f => f.GroupName);
+        var featureSections = (await _feature.GetFeatureSections()).OrderBy(f => f.FeatureGroup.GroupName);
+        var features = (await _feature.GetFeatures()).OrderBy(f => f.FeatureSection.SectionName);
+        FeaturesChartViewModel featuresChart = new FeaturesChartViewModel()
+        {
+            FeatureGroups = featureGroups,
+            FeatureSections = featureSections,
+            Features = features,
+        };
+        ViewBag.AllFeatures = featuresChart;
+        #endregion
+
         return await Task.FromResult(View());
     }
 
@@ -182,7 +252,7 @@ public class FeatureController : Controller
         var feature = await _feature.GetFeatureSection(Id);
         if (feature != null)
         {
-            ViewBag.RelatedFeature = await _feature.RelatedFeature(Id);
+            ViewBag.RelatedFeatures = await _feature.RelatedFeature(Id);
             return await Task.FromResult(View(feature));
         }
         return RedirectToAction(nameof(Index));
@@ -218,7 +288,23 @@ public class FeatureController : Controller
     }
     public async Task<IActionResult> AddFeature()
     {
+        ViewBag.Features = (await _feature.GetFeatures()).OrderBy(f => f.FeatureSection.SectionName);
         ViewBag.FeatureSectionId = new SelectList((await _feature.GetFeatureSections()).OrderBy(f => f.SectionName), "Id", "SectionName");
+
+        #region FEATURES CHART
+        //for getting FeaturesChart
+        var featureGroups = (await _feature.GetFeatureGroups()).OrderBy(f => f.GroupName);
+        var featureSections = (await _feature.GetFeatureSections()).OrderBy(f => f.FeatureGroup.GroupName);
+        var features = (await _feature.GetFeatures()).OrderBy(f => f.FeatureSection.SectionName);
+        FeaturesChartViewModel featuresChart = new FeaturesChartViewModel()
+        {
+            FeatureGroups = featureGroups,
+            FeatureSections = featureSections,
+            Features = features,
+        };
+        ViewBag.AllFeatures = featuresChart;
+        #endregion
+
         return await Task.FromResult(View());
     }
 
@@ -238,7 +324,7 @@ public class FeatureController : Controller
     public async Task<IActionResult> EditFeature(int Id)
     {
         var feature = await _feature.GetFeature(Id);
-        if (feature!=null)
+        if (feature != null)
         {
             ViewBag.FeatureSectionId = new SelectList((await _feature.GetFeatureSections()).OrderBy(f => f.SectionName), "Id", "SectionName");
             return await Task.FromResult(View(feature));
@@ -246,17 +332,17 @@ public class FeatureController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpPost,ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> EditFeature(Feature feature)
     {
-        if (ModelState.IsValid) 
+        if (ModelState.IsValid)
         {
             if (await _feature.EditFeature(feature))
             {
                 return RedirectToAction(nameof(GetFeatures));
             }
         }
-            return RedirectToAction(nameof(GetFeatures));
+        return RedirectToAction(nameof(GetFeatures));
     }
 
     public async Task<IActionResult> FeatureDetails(int Id)
@@ -264,6 +350,7 @@ public class FeatureController : Controller
         var feature = await _feature.GetFeature(Id);
         if (feature != null)
         {
+            ViewBag.RelatedFeature = await _feature.RelatedFeature(feature.FeatureSectionId);
             return await Task.FromResult(View(feature));
         }
         return RedirectToAction(nameof(GetFeatures));

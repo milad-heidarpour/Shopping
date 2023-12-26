@@ -9,7 +9,7 @@ namespace Shopping.Areas.Admin.Controllers;
 [Area("Admin")]
 public class ProductClassificationController : Controller
 {
-    string imgPath = "wwwroot/images/productclassification";
+    string imgPath = "wwwroot/Images/ProductClassification";
 
     IBrand _brand;
     ICommodity _commodity;

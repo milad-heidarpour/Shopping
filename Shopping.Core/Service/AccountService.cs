@@ -11,7 +11,7 @@ namespace Shopping.Core.Service;
 public class AccountService : IAccount
 {
     private readonly DatabaseContext _context;
-    string imgPath = "wwwroot/images/usersprofile";
+    string imgPath = "wwwroot/Images/UsersProfile";
     public AccountService(DatabaseContext context)
     {
         _context = context;

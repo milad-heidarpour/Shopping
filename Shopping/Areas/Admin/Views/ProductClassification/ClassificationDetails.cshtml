@@ -56,8 +56,8 @@
 <partial name="~/Areas/Admin/Views/Commodity/CommodityPartial.cshtml" model="@ViewBag.RelatedCommodity" />
 
 <div>
-    <a asp-action="EditClassificationTitle" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="EditClassificationImg" asp-route-id="@Model?.Id">Edit Image</a> |
+    <a asp-area="Admin" asp-controller="ProductClassification" asp-action="EditClassificationTitle" asp-route-id="@Model?.Id" class="btn btn-warning"><span class="bi bi bi-pen"></span></a> |
+    <a asp-area="Admin" asp-controller="ProductClassification" asp-action="EditClassificationImg" asp-route-id="@Model?.Id" class="btn btn-dark"><span class="bi bi-images"></span></a> |
     <a class="btn btn-dark">نمایش محصولات بیشتر از این دسته</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-area="Admin" asp-controller="ProductClassification" asp-action="Index">Back to List</a>
 </div>

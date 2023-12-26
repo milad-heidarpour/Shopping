@@ -1,0 +1,188 @@
+﻿@model IEnumerable<Shopping.Database.Model.Commodity> 
+@* @{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+} *@
+
+
+
+@{
+   
+    var Id1 = TempData["Id1"];
+    var Id2 = TempData["Id2"];
+    var Id3 = TempData["Id3"];
+    var Id4 = TempData["Id4"];
+
+    if (Id1 != null && Id2 == null && Id3 == null && Id4 == null)
+    {
+        @foreach (var item in Model)
+        {
+            <img src="~/Images/Commodity/@item.CommodityAlbums.Select(f=>f.CommodityImg).ElementAt(0)" width="70" />
+            <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@item.Id" class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        }
+    }
+    else if (Id1 != null && Id2 != null && Id3 == null && Id4 == null)
+    {
+        @foreach (var item in Model)
+        {
+            <img src="~/Images/Commodity/@item.CommodityAlbums.Select(f=>f.CommodityImg).ElementAt(0)" width="70" />
+            <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@Id2" asp-route-Id3="@item.Id" class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        }
+    }
+    else if (Id1 != null && Id2 == null && Id3 != null && Id4 == null)
+    {
+        @foreach (var item in Model)
+        {
+            <img src="~/Images/Commodity/@item.CommodityAlbums.Select(f=>f.CommodityImg).ElementAt(0)" width="70" />
+            <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@item.Id" asp-route-Id3="@Id3"  class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        }
+    }
+    else if (Id1 != null && Id2 == null && Id3 == null && Id4 != null)
+    {
+        @foreach (var item in Model)
+        {
+            <img src="~/Images/Commodity/@item.CommodityAlbums.Select(f=>f.CommodityImg).ElementAt(0)" width="70" />
+            <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@item.Id" asp-route-Id4="@Id4" asp-route-Id3="@Id3" class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        }
+    }
+    else if (Id1 != null && Id2 != null && Id3 != null && Id4 == null)
+    {
+        @foreach (var item in Model)
+        {
+            <img src="~/Images/Commodity/@item.CommodityAlbums.Select(f=>f.CommodityImg).ElementAt(0)" width="70" />
+            <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@Id2" asp-route-Id3="@Id3" asp-route-Id4="@item.Id" class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        }
+    }
+    else if (Id1 != null && Id2 != null && Id3 == null && Id4 != null)
+    {
+        @foreach (var item in Model)
+        {
+            <img src="~/Images/Commodity/@item.CommodityAlbums.Select(f=>f.CommodityImg).ElementAt(0)" width="70" />
+            <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@Id2" asp-route-Id3="@item.Id" asp-route-Id4="@Id4" class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        }
+    }
+    else if (Id1 != null && Id2 == null && Id3 != null && Id4 != null)
+    {
+        @foreach (var item in Model)
+        {
+            <img src="~/Images/Commodity/@item.CommodityAlbums.Select(f=>f.CommodityImg).ElementAt(0)" width="70" />
+            <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@item.Id" asp-route-Id3="@Id3" asp-route-Id4="@Id4" class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        }
+    }
+    else if (Id1 != null && Id2 != null && Id3 != null && Id4 != null)
+    {
+        // @foreach (var item in Model)
+        // {
+        //     <img src="~/Images/Commodity/@item.CommodityAlbums.Select(f=>f.CommodityImg).ElementAt(0)" width="70" />
+        //     <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@Id2" asp-route-Id3="@Id3" asp-route-Id4="@item.Id" class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        // }
+        <h3 class="text-danger">امکان مقایسه بیش از 4کالا وجود ندارد</h3>
+    }
+   
+    
+
+}
+
+
+
+
+@* <h1>Index</h1>
+
+<p>
+    <a asp-area="Admin" asp-controller="Commodity" asp-action="AddNewCommodity" class="btn btn-success"><span class="bi bi-patch-plus"> Create</span></a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductFaName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductEnName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inventory)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.Introduction)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NotShow)
+            </th>
+             <th>
+            @Html.DisplayNameFor(model => model.RegisterDate)
+            </th>
+             <th>
+            @Html.DisplayNameFor(model => model.UpdateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Brand.BrandImg)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Group.GroupImg)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductFaName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductEnName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Discount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Inventory)
+                </td>
+                <td>
+            @Html.DisplayFor(modelItem => item.Introduction)
+            </td>
+                <td>
+                    @{
+                        if (item.NotShow)
+                        {
+                            <a class="btn btn-danger rounded-5"><span class="fa fa-times-circle"></span>عدم نمایش عمومی</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-success rounded-5"><span class="fa fa-check-circle"></span> نمایش عمومی</a>
+                        }
+                    }
+                    @Html.DisplayFor(modelItem => item.NotShow)
+                </td>
+                <td>
+            @Html.DisplayFor(modelItem => item.RegisterDate)
+            </td>
+                <td>
+            @Html.DisplayFor(modelItem => item.UpdateDate)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Brand.BrandEnName)
+                    <img src="~/Images/Brand/@item.Brand.BrandImg" width="50">
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Group.GroupEnName)
+                    <img src="~/Images/ProductClassification/@item.Group.GroupImg" width="50">
+                </td>
+                <td>
+                    <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-action="Cancel" asp-route-FId="@TempData["FID"]" asp-route-SId="@item.Id" class="btn btn-light"><span class="bi bi-input-cursor"></span></a> |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table> *@

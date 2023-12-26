@@ -8,33 +8,40 @@
 
 <h1> گروه ویژگی</h1>
 
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.GroupName)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GroupName)
-                </td>
-                <td>
-                    <a asp-action="EditFeatureGroup" asp-route-id="@item.Id" class="btn btn-warning"><span class="bi bi bi-pen"></span></a> |
-                    <a asp-action="FeatureGroupDetails" asp-route-id="@item.Id" class="btn btn-info"><span class="bi bi-info-square"></span></a> |
-                    <a data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="DeleteFeatureGroup('@(item.Id)')" class="btn btn-danger"><span class="bi bi-trash"></span></a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
+@{
+    if (Model.Count()>0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GroupName)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GroupName)
+                        </td>
+                        <td>
+                            <a asp-area="Admin" asp-controller="Feature" asp-action="EditFeatureGroup" asp-route-id="@item.Id" class="btn btn-warning"><span class="bi bi bi-pen"></span></a> |
+                            <a asp-area="Admin" asp-controller="Feature" asp-action="FeatureGroupDetails" asp-route-id="@item.Id" class="btn btn-info"><span class="bi bi-info-square"></span></a> |
+                            <a data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="DeleteFeatureGroup('@(item.Id)')" class="btn btn-danger"><span class="bi bi-trash"></span></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h1 class="text-danger">فعلا گروه ویژگی وجود ندارد</h1>
+    }
+}
 
 
 
@@ -66,7 +73,7 @@
     })
     function DeleteFeatureGroup(FeatureGroupId) {
         $.ajax({
-            url: '/admin/feature/FeatureGroupDelete',
+            url: '/Admin/Feature/FeatureGroupDelete',
             type: 'get',
             data: {/*controller parameter*/  id: FeatureGroupId /*send parameter*/ },
             success: (result) => {

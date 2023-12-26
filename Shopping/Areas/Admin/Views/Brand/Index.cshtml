@@ -8,7 +8,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="CreateBrand">Create New</a>
+    <a asp-area="Admin" asp-controller="Brand" asp-action="CreateNewBrand" class="btn btn-success"><span class="bi bi-patch-plus"> Create</span></a>
 </p>
 <table class="table">
     <thead>
@@ -64,10 +64,10 @@
                     @Html.DisplayFor(modelItem => item.NotShow)
                 </td>
                 <td>
-                    <a asp-action="EditBrandTitel" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="BrandDetails" asp-route-id="@item.Id">Details</a> |
+                    <a asp-area="Admin" asp-controller="Brand" asp-action="EditBrandTitel" asp-route-id="@item.Id" class="btn btn-warning"><span class="bi bi bi-pen"></span></a> |
+                    <a asp-area="Admin" asp-controller="Brand" asp-action="BrandDetails" asp-route-id="@item.Id" class="btn btn-info"><span class="bi bi-info-square"></span></a> |
                     <a data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="DeleteBrand('@(item.Id)')" class="btn btn-danger"><span class="fa fa-trash-o"></span></a> |
-                    <a asp-action="EditBrandImg" asp-route-id="@item.Id">Edit IMG</a>
+                    <a asp-area="Admin" asp-controller="Brand" asp-action="EditBrandImg" asp-route-id="@item.Id" class="btn btn-dark"><span class="bi bi-images"></span></a>
                 </td>
             </tr>
         }
@@ -104,7 +104,7 @@
     })
     function DeleteBrand(BrandId) {
         $.ajax({
-            url: '/admin/brand/delete',
+            url: '/admin/Brand/DeleteBrand',
             type: 'get',
             data: {/*controller parameter*/  id: BrandId /*send parameter*/ },
             success: (result) => {

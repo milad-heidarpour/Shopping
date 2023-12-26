@@ -11,17 +11,18 @@
     <h4>FeatureGroup</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.GroupName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.GroupName)
         </dd>
     </dl>
 </div>
 <hr />
-<partial name="FeatureSectionsPartial.cshtml" model="@ViewBag.RelatedFeatureSections" />
 <div>
-    <a asp-action="EditFeatureGroup" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-area="Admin" asp-controller="Feature" asp-action="EditFeatureGroup" asp-route-id="@Model?.Id" class="btn btn-warning"><span class="bi bi bi-pen"></span></a> |
     <a asp-action="Index">Back to List</a>
 </div>
+<hr style="opacity: 20" class="text-danger " />
+<partial name="FeatureGroupsPartial.cshtml" model="@ViewBag.FeatureGroups" />

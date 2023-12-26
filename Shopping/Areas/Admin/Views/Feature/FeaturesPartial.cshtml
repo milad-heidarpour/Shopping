@@ -1,27 +1,63 @@
 ﻿@model IEnumerable<Shopping.Database.Model.Feature>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FeatureSection)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+
+
+@{
+    if (Model.Count() > 0)
+    {
+
+        var _sectionName = Model.Select(f => f.FeatureSection.SectionName).ToList();
+        var _sectionDistinct = _sectionName.Distinct().ToList();
+        for (int i = 0; i < _sectionDistinct.Count(); i++)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FeatureSection.SectionName)
-                </td>
-            </tr>
+            <h2 class="text-success"><span class="bi bi-braces-asterisk text-bg-success"></span>@_sectionDistinct[i]</h2>
+
+            @foreach (var _features in Model.Where(f => f.FeatureSection.SectionName == _sectionDistinct[i]))
+            {
+                //<a class="btn btn-warning me-1 m-1">@sections.SectionName</a>
+                <h4 class="text-danger"> <span class="bi bi-chevron-double-left text-bg-danger"></span>@_features.Title</h4>
+            }
         }
-    </tbody>
-</table>
+
+
+
+
+
+
+
+
+        // <table class="table">
+        //     <thead>
+        //         <tr>
+        //             <th>
+        //                 @Html.DisplayNameFor(model => model.Title)
+        //             </th>
+        //             <th>
+        //                 @Html.DisplayNameFor(model => model.FeatureSection)
+        //             </th>
+        //             <th></th>
+        //         </tr>
+        //     </thead>
+        //     <tbody>
+
+        //         @foreach (var item in Model)
+        //         {
+        //             <tr>
+        //                 <td>
+        //                     @Html.DisplayFor(modelItem => item.Title)
+        //                 </td>
+        //                 <td>
+        //                     @Html.DisplayFor(modelItem => item.FeatureSection.SectionName)
+        //                 </td>
+        //             </tr>
+        //         }
+
+
+        //     </tbody>
+        // </table>
+    }
+    else
+    {
+        <h1 class="text-danger">فعلا ویژگی برای این قسمت ثبت نشده است</h1>
+    }
+}
+

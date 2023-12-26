@@ -26,9 +26,11 @@
     </dl>
 </div>
 <div>
-    <a asp-action="EditFeature" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-area="Admin" asp-controller="Feature" asp-action="EditFeature" asp-route-id="@Model?.Id" class="btn btn-warning"><span class="bi bi bi-pen"></span></a> |
     <a asp-action="Index">Back to List</a>
 </div>
+<hr style="opacity: 20" class="text-danger " />
+<partial name="FeaturesPartial.cshtml" model="ViewBag.RelatedFeature" />
 
 
 

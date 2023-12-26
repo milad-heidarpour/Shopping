@@ -1,48 +1,71 @@
 ﻿@model IEnumerable<Shopping.Database.Model.FeatureSection>
 
-
 @{
-    ViewData["Title"] = "FeatureSectionPartial";
+    ViewData["Title"] = "GetFeatureSections";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
+<h1>GetFeatureSections</h1>
 
-<h1> قسمت ویژگی</h1>
+<p>
+    <a asp-area="Admin" asp-controller="Feature" asp-action="Create" class="btn btn-success"><span class="bi bi-patch-plus"> Create</span></a>
+</p>
+@{
+    if (Model.Count() > 0)
+    {
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <span class="bi bi-sort-alpha-down fa-lg"></span>
-                @Html.DisplayNameFor(model => model.FeatureGroup)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SectionName)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-               
-                <td>
-                    @Html.DisplayFor(modelItem => item.FeatureGroup.GroupName)
-                </td>
-                <td>
+        <table class="table">
+            <thead>
+                <tr>
+                    
+                    <th>
+                        @Html.DisplayNameFor(model => model.FeatureGroup)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SectionName)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
 
-                    @Html.DisplayFor(modelItem => item.SectionName)
-                </td>
-                <td>
-                    <a asp-action="EditFeatureSection" asp-route-id="@item.Id" class="btn btn-warning"><span class="bi bi bi-pen"></span></a> |
-                    <a asp-action="FeatureSectionDetails" asp-route-id="@item.Id" class="btn btn-info"><span class="bi bi-info-square"></span></a> |
-                    <a data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="DeleteFeatureSection('@(item.Id)')" class="btn btn-danger"><span class="bi bi-trash"></span></a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                @{
+                    var _featureGroup = Model.Select(f => f.FeatureGroup.GroupName).ToList();
+                    var _featureGroupDistinct = _featureGroup.Distinct().ToList();
+                    for (int i = 0; i < _featureGroupDistinct.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => _featureGroupDistinct[i])
+                            </td>
+
+                            @foreach (var _featureSections in Model.Where(f => f.FeatureGroup.GroupName == _featureGroupDistinct[i]))
+                            {
+                                <td>
+                                    @( _featureSections.SectionName)
+                                </td>
+                                <td>
+                                    <a asp-area="Admin" asp-controller="Feature" asp-action="EditFeatureSection" asp-route-id="@_featureSections.Id" class="btn btn-warning"><span class="bi bi bi-pen"></span></a> |
+                                    <a asp-area="Admin" asp-controller="Feature" asp-action="FeatureSectionDetails" asp-route-id="@_featureSections.Id" class="btn btn-info"><span class="bi bi-info-square"></span></a> |
+                                    <a data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="DeleteFeatureSection('@(_featureSections.Id)')" class="btn btn-danger"><span class="fa fa-trash-o"></span></a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+
+    }
+    else
+    {
+        <h1 class="text-danger">فعلا گروه ویژگی وجود ندارد</h1>
+    }
+}
+
+
+
 
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -62,7 +85,22 @@
     </div>
 </div>
 
-
+@* @foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SectionName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FeatureGroup.GroupName)
+        </td>
+        <td>
+            <a asp-area="Admin" asp-controller="Feature" asp-action="EditFeatureSection" asp-route-id="@item.Id" class="btn btn-warning"><span class="bi bi bi-pen"></span></a> |
+            <a asp-area="Admin" asp-controller="Feature" asp-action="FeatureSectionDetails" asp-route-id="@item.Id" class="btn btn-info"><span class="bi bi-info-square"></span></a> |
+            <a data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="DeleteFeatureSection('@(item.Id)')" class="btn btn-danger"><span class="fa fa-trash-o"></span></a>
+        </td>
+    </tr>
+} *@
 
 <script>
     const myModal = document.getElementById('myModal')
@@ -73,7 +111,7 @@
     })
     function DeleteFeatureSection(FeatureSectionId) {
         $.ajax({
-            url: '/admin/feature/FeatureSectionDelete',
+            url: '/Admin/Feature/FeatureSectionDelete',
             type: 'get',
             data: {/*controller parameter*/  id: FeatureSectionId /*send parameter*/ },
             success: (result) => {

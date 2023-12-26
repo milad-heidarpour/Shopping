@@ -9,7 +9,7 @@ namespace Shopping.Core.Service;
 
 public class ClassificationService : IClassification
 {
-    string imgPath = "wwwroot/images/ProductClassification";
+    string imgPath = "wwwroot/Images/ProductClassification";
     private readonly DatabaseContext _context;
     public ClassificationService(DatabaseContext context)
     {
