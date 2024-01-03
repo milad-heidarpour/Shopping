@@ -18,4 +18,5 @@ public interface ICommodity:IDisposable
     Task<bool> DeleteCommodity(Guid CommodityId);
     Task<bool> EditCommodity(Commodity commodity);
     Task<List<Commodity>> GetClassificationCommodities(Guid ClassificationId);
+    //Task<List<CommodityFeature>> GetCommodityFeatures();
 }

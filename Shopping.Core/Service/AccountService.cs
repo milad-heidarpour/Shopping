@@ -34,49 +34,27 @@ public class AccountService : IAccount
                 return await Task.FromResult(false);
             }
 
-            if (register.Password == register.RePassword)
+            if (register.Password == register.RePassword && register.Gender == "مرد")
             {
-                if (register.Gender == "مرد")
+                User ManUser = new User()
                 {
-                    User ManUser = new User()
-                    {
-                        Id = Guid.NewGuid(),
-                        RoleId = _context.Roles.SingleOrDefault(r => r.RoleEnName == "User").Id,
-                        FName = null,
-                        LName = null,
-                        ProfileImg = "Man.png",
-                        PhoneNumb = register.PhoneNumb,
-                        Password = await new Security().HashPassword(await new Security().HashPassword(register.Password)),
-                        RePassword = await new Security().HashPassword(await new Security().HashPassword(register.Password)),
-                        Gender = register.Gender,
-                        RegisterDate = await new DateAndTime().GetPersianDate(),
-                    };
+                    Id = Guid.NewGuid(),
+                    RoleId = _context.Roles.SingleOrDefault(r => r.RoleEnName == "User").Id,
+                    FName = null,
+                    LName = null,
+                    ProfileImg = "Man.png",
+                    PhoneNumb = register.PhoneNumb,
+                    Password = await new Security().HashPassword(await new Security().HashPassword(register.Password)),
+                    RePassword = await new Security().HashPassword(await new Security().HashPassword(register.Password)),
+                    Gender = register.Gender,
+                    RegisterDate = await new DateAndTime().GetPersianDate(),
+                };
 
-                    _context.Users.Add(ManUser);
-                    await _context.SaveChangesAsync();
-                    return await Task.FromResult(true);
-                }
+                _context.Users.Add(ManUser);
+                await _context.SaveChangesAsync();
+                return await Task.FromResult(true);
 
-                else if (register.Gender == "زن")
-                {
-                    User WomanUser = new User()
-                    {
-                        Id = Guid.NewGuid(),
-                        RoleId = _context.Roles.SingleOrDefault(r => r.RoleEnName == "User").Id,
-                        FName = null,
-                        LName = null,
-                        ProfileImg = "Woman.png",
-                        PhoneNumb = register.PhoneNumb,
-                        Password = await new Security().HashPassword(await new Security().HashPassword(register.Password)),
-                        RePassword = await new Security().HashPassword(await new Security().HashPassword(register.Password)),
-                        Gender = register.Gender,
-                        RegisterDate = await new DateAndTime().GetPersianDate(),
-                    };
 
-                    _context.Users.Add(WomanUser);
-                    await _context.SaveChangesAsync();
-                    return await Task.FromResult(true);
-                }
 
                 //create profile image and add to users profile folder
                 //int imgCode = new Random().Next(10000, 1000000);
@@ -111,6 +89,26 @@ public class AccountService : IAccount
                 //_context.Users.Add(newUser);
                 //await _context.SaveChangesAsync();
                 //return await Task.FromResult(true);
+            }
+            else if (register.Password == register.RePassword && register.Gender == "زن")
+            {
+                User WomanUser = new User()
+                {
+                    Id = Guid.NewGuid(),
+                    RoleId = _context.Roles.SingleOrDefault(r => r.RoleEnName == "User").Id,
+                    FName = null,
+                    LName = null,
+                    ProfileImg = "Woman.png",
+                    PhoneNumb = register.PhoneNumb,
+                    Password = await new Security().HashPassword(await new Security().HashPassword(register.Password)),
+                    RePassword = await new Security().HashPassword(await new Security().HashPassword(register.Password)),
+                    Gender = register.Gender,
+                    RegisterDate = await new DateAndTime().GetPersianDate(),
+                };
+
+                _context.Users.Add(WomanUser);
+                await _context.SaveChangesAsync();
+                return await Task.FromResult(true);
             }
             return await Task.FromResult(false);
         }

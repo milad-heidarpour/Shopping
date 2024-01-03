@@ -27,5 +27,6 @@ public class DatabaseContext:DbContext
     public DbSet<FeatureGroup> FeatureGroups { get; set; }
     public DbSet<FeatureSection> FeatureSections { get; set; }
     public DbSet<Feature> Features { get; set; }
+    public DbSet<CommodityFeature> CommodityFeatures { get; set; }
 
 }

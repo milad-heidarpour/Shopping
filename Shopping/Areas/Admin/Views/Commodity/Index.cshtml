@@ -105,6 +105,7 @@
                     @* <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> | *@
                     <a asp-area="Admin" asp-controller="Commodity" asp-action="AddCommodityAlbum" asp-route-id="@item.Id" class="btn btn-dark"><span class="bi bi-images"></span></a> |
                     <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@item.Id" class="btn btn-light"><span class="bi bi-input-cursor"></span></a> |
+                    <a asp-area="Admin" asp-controller="Commodity" asp-action="CreateCommodityFeature" asp-route-CommodityId="@item.Id" class="btn btn-primary"><span class="bi bi-gear-wide-connected"></span></a>
                 </td>
             </tr>
         }

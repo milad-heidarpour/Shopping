@@ -217,4 +217,10 @@ public class CommodityService : ICommodity
         //}
         return await Task.FromResult(commodities);
     }
+
+    //public async Task<List<CommodityFeature>> GetCommodityFeatures()
+    //{
+    //    var commodityFeatures=await _context.CommodityFeatures.Include(f=>f.Commodity).ToListAsync();
+    //    return await Task.FromResult(commodityFeatures);
+    //}
 }

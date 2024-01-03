@@ -1,0 +1,64 @@
+﻿@model Shopping.Database.Model.CommodityFeature
+
+@{
+    ViewData["Title"] = "CreateCommodityFeature";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<partial name="CommodityDetailPartial.cshtml" model="@ViewBag.Commodity" />
+<partial name="CommodityAlbumPartial.cshtml" model="@ViewBag.Album" />
+
+
+<h4>CommodityFeature</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateCommodityFeature">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" value="@ViewBag.Id" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label"></label>
+                <select class="form-control" ></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label"></label>
+                <select class="form-control" asp-items="ViewBag.FeatureSections"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="FeatureId" class="control-label"></label>
+                <select asp-for="FeatureId" class="form-control" asp-items="ViewBag.FeatureId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CommodityId" class="control-label"></label>
+                <input asp-for="CommodityId" class="form-control" />
+                <span asp-validation-for="CommodityId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Value" class="control-label"></label>
+                <input asp-for="Value" class="form-control" />
+                <span asp-validation-for="Value" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    window.addEventListener("DOMContentLoaded",()=>{
+        handleGetProductFeature();
+    })
+    const handleGetProductFeature() {
+        fetch('/Admin/Commodity/GetFeatureGroup').then((res) =>res.json()).then((res) => {
+            console.log(res.GroupName);
+        })
+    }
+</script>

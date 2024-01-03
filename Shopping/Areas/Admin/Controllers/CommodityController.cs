@@ -16,15 +16,17 @@ public class CommodityController : Controller
     ICommodity _commodity;
     IBrand _brand;
     IClassification _classification;
-    public CommodityController(ICommodity commodity, IBrand brand, IClassification classification)
+    IFeature _feature;
+    public CommodityController(ICommodity commodity, IBrand brand, IClassification classification,IFeature feature)
     {
         _commodity = commodity;
         _brand = brand;
         _classification = classification;
+        _feature = feature;
     }
     public async Task<IActionResult> Index()
     {
-        var commodities = await _commodity.GetCommodities(/*ClassificationId:Guid.Empty,*/);
+        var commodities = (await _commodity.GetCommodities(/*ClassificationId:Guid.Empty,*/)).OrderBy(f=>f.RegisterDate);
         return View(commodities);
     }
     //public async Task<IActionResult> GetCommodities()
@@ -83,10 +85,12 @@ public class CommodityController : Controller
         var commodity = await _commodity.GetCommodity(Id);
 
         var commodityAlbum = await _commodity.GetCommodityAlbums(commodity.Id);
+
         if (commodityAlbum != null)
         {
             ViewBag.Album = commodityAlbum;
         }
+
         ViewBag.Commodity = commodity;
         ViewBag.CommodityId = commodity.Id;
         ViewBag.Id = Guid.NewGuid();
@@ -237,14 +241,14 @@ public class CommodityController : Controller
                 TempData["Id2"] = Id2;
                 TempData["Id3"] = Id3;
                 TempData["Id4"] = Id4;
-                var commodities = await _commodity.NoDupCommodities(DupId1: Id1, DupId2: Id2, DupId3: Id3, DupId4: Id4, notShow: false);
+                var _Commodities = await _commodity.NoDupCommodities(DupId1: Id1, DupId2: Id2, DupId3: Id3, DupId4: Id4, notShow: false);
                 CompareViewModel CompareDelete = new CompareViewModel()
                 {
                     Commodity1 = commodity1,
                     Commodity2 = null,
                     Commodity3 = commodity3,
                     Commodity4 = commodity4,
-                    Commodities = commodities,
+                    Commodities = _Commodities,
                 };
                 return await Task.FromResult(View(CompareDelete));
             }
@@ -255,14 +259,14 @@ public class CommodityController : Controller
                 TempData["Id2"] = Id2;
                 TempData["Id3"] = Id3;
                 TempData["Id4"] = Id4;
-                var commodities = await _commodity.NoDupCommodities(DupId1: Id1, DupId2: Id2, DupId3: Id3, DupId4: Id4, notShow: false);
+                var _Commodities = await _commodity.NoDupCommodities(DupId1: Id1, DupId2: Id2, DupId3: Id3, DupId4: Id4, notShow: false);
                 CompareViewModel CompareDelete = new CompareViewModel()
                 {
                     Commodity1 = commodity1,
                     Commodity2 = commodity2,
                     Commodity3 = null,
                     Commodity4 = commodity4,
-                    Commodities = commodities
+                    Commodities = _Commodities
                 };
                 return await Task.FromResult(View(CompareDelete));
             }
@@ -273,29 +277,55 @@ public class CommodityController : Controller
                 TempData["Id2"] = Id2;
                 TempData["Id3"] = Id3;
                 TempData["Id4"] = Id4;
-                var commodities = await _commodity.NoDupCommodities(DupId1: Id1, DupId2: Id2, DupId3: Id3, DupId4: Id4, notShow: false);
+                var _Commodities = await _commodity.NoDupCommodities(DupId1: Id1, DupId2: Id2, DupId3: Id3, DupId4: Id4, notShow: false);
                 CompareViewModel CompareDelete = new CompareViewModel()
                 {
                     Commodity1 = commodity1,
                     Commodity2 = commodity2,
                     Commodity3 = commodity3,
                     Commodity4 = null,
-                    Commodities = commodities
+                    Commodities = _Commodities
                 };
                 return await Task.FromResult(View(CompareDelete));
             }
         }
-        var commodities1 = await _commodity.NoDupCommodities(DupId1: Id1, DupId2: Id2, DupId3: Id3, DupId4: Id4, notShow: false);
+        var Commodities = await _commodity.NoDupCommodities(DupId1: Id1, DupId2: Id2, DupId3: Id3, DupId4: Id4, notShow: false);
         CompareViewModel compareView = new CompareViewModel()
         {
             Commodity1 = commodity1,
             Commodity2 = commodity2,
             Commodity3 = commodity3,
             Commodity4 = commodity4,
-            Commodities = commodities1
+            Commodities = Commodities
         };
 
         return await Task.FromResult(View(compareView));
+    }
+
+    public async Task<List<FeatureGroup>> GetFeatureGroup()
+    {
+        var featureGroups = await _feature.GetFeatureGroups();
+        return featureGroups;
+    }
+
+    public async Task<IActionResult> CreateCommodityFeature(Guid CommodityId)
+    {
+        var commodity = await _commodity.GetCommodity(CommodityId);
+        var commodityAlbum = await _commodity.GetCommodityAlbums(commodity.Id);
+        if (commodityAlbum != null)
+        {
+            ViewBag.Album = commodityAlbum;
+        }
+        var featureGroups = await _feature.GetFeatureGroups();
+        var featureSections=await _feature.GetFeatureSections();
+        var features=await _feature.GetFeatures();
+        ViewBag.Commodity = commodity;
+        ViewBag.Id=Guid.NewGuid();
+        ViewBag.FeatureGroups = new SelectList(await _feature.GetFeatureGroups(), "Id", "GroupName");
+        ViewBag.FeatureSections = new SelectList(await _feature.GetFeatureSections(), "Id", "SectionName");
+        ViewBag.FeatureId = new SelectList(await _feature.GetFeatures(), "Id", "Title");
+        return await Task.FromResult(View());
+
     }
 
     //public async Task<IActionResult> CompareCommodities(Guid ? FId, Guid? SId)//Id==Commodityid
