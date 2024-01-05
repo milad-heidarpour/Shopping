@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Shopping.Database.Model.Commodity> 
+
+
+@* @{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+} *@
+
+@* اینجا یه ارور داریم برای نمایش عکس که ممکن هست اون محصول عکسی نداشته باشد  *@
+
+@{
+   
+    var Id1 = TempData["Id1"];
+    var Id2 = TempData["Id2"];
+    var Id3 = TempData["Id3"];
+    var Id4 = TempData["Id4"];
+
+    if (Id1 != null && Id2 == null && Id3 == null && Id4 == null)
+    {
+        @foreach (var item in Model)
+        {
+            <img src="~/Images/Commodity/@item.ProductImg" width="70" />
+            <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@item.Id" class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        }
+    }
+    else if (Id1 != null && Id2 != null && Id3 == null && Id4 == null)
+    {
+        @foreach (var item in Model)
+        {
+            <img src="~/Images/Commodity/@item.ProductImg" width="70" />
+            <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@Id2" asp-route-Id3="@item.Id" class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        }
+    }
+    else if (Id1 != null && Id2 == null && Id3 != null && Id4 == null)
+    {
+        @foreach (var item in Model)
+        {
+            <img src="~/Images/Commodity/@item.ProductImg" width="70" />
+            <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@item.Id" asp-route-Id3="@Id3" class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        }
+    }
+    else if (Id1 != null && Id2 == null && Id3 == null && Id4 != null)
+    {
+        @foreach (var item in Model)
+        {
+            <img src="~/Images/Commodity/@item.ProductImg" width="70" />
+            <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@item.Id" asp-route-Id4="@Id4" asp-route-Id3="@Id3" class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        }
+    }
+    else if (Id1 != null && Id2 != null && Id3 != null && Id4 == null)
+    {
+        @foreach (var item in Model)
+        {
+            <img src="~/Images/Commodity/@item.ProductImg" width="70" />
+            <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@Id2" asp-route-Id3="@Id3" asp-route-Id4="@item.Id" class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        }
+    }
+    else if (Id1 != null && Id2 != null && Id3 == null && Id4 != null)
+    {
+        @foreach (var item in Model)
+        {
+            <img src="~/Images/Commodity/@item.ProductImg" width="70" />
+            <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@Id2" asp-route-Id3="@item.Id" asp-route-Id4="@Id4" class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        }
+    }
+    else if (Id1 != null && Id2 == null && Id3 != null && Id4 != null)
+    {
+        @foreach (var item in Model)
+        {
+            <img src="~/Images/Commodity/@item.ProductImg" width="70" />
+            <a asp-area="Admin" asp-controller="Commodity" asp-action="CompareCommodities" asp-route-Id1="@Id1" asp-route-Id2="@item.Id" asp-route-Id3="@Id3" asp-route-Id4="@Id4" class="btn btn-light"><span class="bi bi-input-cursor"></span></a>
+        }
+    }
+    else if (Id1 != null && Id2 != null && Id3 != null && Id4 != null)
+    {
+        <h3 class="text-danger">امکان مقایسه بیش از 4کالا وجود ندارد</h3>
+    }
+
+}

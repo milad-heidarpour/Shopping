@@ -60,10 +60,9 @@
                     @Html.DisplayFor(modelItem => item.NotShow)
                 </td>
                 <td>
-                    <a asp-area="Admin" asp-controller="ProductClassification" asp-action="EditClassificationTitle" asp-route-id="@item.Id" class="btn btn-warning"><span class="bi bi bi-pen"></span></a> |
-                    <a asp-area="Admin" asp-controller="ProductClassification" asp-action="ClassificationDetails" asp-route-id="@item.Id" class="btn btn-info"><span class="bi bi-info-square"></span></a> |
+                    <a asp-area="Admin" asp-controller="ProductClassification" asp-action="EditClassification" asp-route-ClassificationId="@item.Id" class="btn btn-warning"><span class="bi bi bi-pen"></span></a> |
+                    <a asp-area="Admin" asp-controller="ProductClassification" asp-action="ClassificationDetails" asp-route-ClassificationId="@item.Id" class="btn btn-info"><span class="bi bi-info-square"></span></a> |
                     <a data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="DeleteClassification('@(item.Id)')" class="btn btn-danger"><span class="fa fa-trash-o"></span></a> |
-                    <a asp-area="Admin" asp-controller="ProductClassification" asp-action="EditClassificationImg" asp-route-id="@item.Id" class="btn btn-dark"><span class="bi bi-images"></span></a> 
                 </td>
             </tr>
         }

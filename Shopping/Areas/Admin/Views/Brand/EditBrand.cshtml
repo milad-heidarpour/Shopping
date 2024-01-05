@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-area="Admin" asp-controller="Brand" asp-action="EditBrandTitel">
+        <form asp-area="Admin" asp-controller="Brand" asp-action="EditBrand" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -25,15 +25,17 @@
                 <span asp-validation-for="BrandFaName" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <br />
+                <input type="file" name="File" onchange="ImgPreview(this)" accept=".jpg,.png" />
+                <img id="Brand-preview" src="~/Images/Brand/@Model.BrandImg" width="256" />
+                <label asp-for="BrandImg" class="control-label"></label>
+                <input asp-for="BrandImg" value="@Model.BrandImg" id="img-name" class="form-control" />
+                <span asp-validation-for="BrandImg" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="BrandDes" class="control-label"></label>
                 <input asp-for="BrandDes" class="form-control" />
                 <span asp-validation-for="BrandDes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BrandImg" class="control-label" hidden></label>
-                <input asp-for="BrandImg" class="form-control" readonly type="hidden"/>
-                <img src="~/images/brand/@Model.BrandImg"/>
-                <span asp-validation-for="BrandImg" class="text-danger" hidden></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
@@ -51,3 +53,18 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<script>
+    function ImgPreview(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                let img = document.getElementById('Brand-preview');
+                img.setAttribute('src', e.target.result);
+
+                document.getElementById('img-name').value = input.files[0].name;
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

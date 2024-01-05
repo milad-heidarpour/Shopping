@@ -15,27 +15,22 @@
     }
 }
 
-
 <partial name="CommodityDetailPartial.cshtml" model="@ViewBag.Commodity" />
-<partial name="CommodityAlbumPartial.cshtml" model="@ViewBag.Album" />
 <hr />
-
-@* اینجا هم باید مثل بالا یه پارشیال درست کنم که اطلاعات محصول را نشان دهد توی یه باکس *@
-
-@* <h1>افزودن عکس برای محصول</h1>
 @{
-    var commodity = ViewBag.Commodity;
+    if (ViewBag.Album != null)
+    {
+        <partial name="DeleteAlbumPartial.cshtml" model="@ViewBag.Album" />
+    }
+    else
+    {
+        <h1 class="text-danger">عکسی برای این محصول وجود ندارد</h1>
+    }
 }
 
-<h5>@commodity.ProductFaName</h5>
-<h5>@commodity.ProductEnName</h5>
-<h5>@commodity.Brand.BrandEnName</h5>
-<h5>@commodity.Price</h5>
-<h5>@commodity.Discount</h5>
-<h5>@commodity.Inventory</h5>
-<h5>@commodity.RegisterDate</h5> *@
-
 <hr />
+
+
 <div class="row">
     <div class="col-md-4">
         <form asp-area="Admin" asp-controller="Commodity" asp-action="AddCommodityAlbum" enctype="multipart/form-data">

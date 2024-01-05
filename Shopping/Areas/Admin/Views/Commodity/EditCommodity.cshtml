@@ -1,4 +1,4 @@
-﻿@model Shopping.Database.Model.Commodity
+﻿@model Shopping.Core.ViewModels.EditCommodityViewModel
 
 @{
     ViewData["Title"] = "EditCommodity";
@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-area="Admin" asp-controller="Commodity" asp-action="EditCommodity">
+        <form asp-area="Admin" asp-controller="Commodity" asp-action="EditCommodity" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -33,6 +33,14 @@
                 <label asp-for="ProductEnName" class="control-label"></label>
                 <input asp-for="ProductEnName" class="form-control" />
                 <span asp-validation-for="ProductEnName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <br />
+                <input type="file" name="CommodityImg" onchange="ImgPreview(this)" accept=".jpg,.png" />
+                <img id="Commodity-preview" src="~/Images/Commodity/@Model.ProductImg" width="256" />
+                <label asp-for="ProductImg" class="control-label"></label>
+                <input asp-for="ProductImg" value="@Model.ProductImg" id="img-name" class="form-control" />
+                <span asp-validation-for="ProductImg" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
@@ -59,15 +67,15 @@
                     <input class="form-check-input" asp-for="NotShow" /> @Html.DisplayNameFor(model => model.NotShow)
                 </label>
             </div>
-            <div class="form-group" hidden>
-                <label asp-for="RegisterDate" class="control-label" hidden></label>
-                <input asp-for="RegisterDate" class="form-control" readonly type="hidden"/>
-                <span asp-validation-for="RegisterDate" class="text-danger" hidden></span>
+            <div class="form-group" >
+                <label asp-for="RegisterDate" class="control-label" ></label>
+                <input asp-for="RegisterDate" class="form-control" readonly />
+                <span asp-validation-for="RegisterDate" class="text-danger" ></span>
             </div>
-            <div class="form-group" hidden>
-                <label asp-for="UpdateDate" class="control-label" hidden></label>
-                <input asp-for="UpdateDate" class="form-control" readonly type="hidden"/>
-                <span asp-validation-for="UpdateDate" class="text-danger" hidden></span>
+            <div class="form-group" >
+                <label asp-for="UpdateDate" class="control-label" ></label>
+                <input asp-for="UpdateDate" class="form-control" readonly/>
+                <span asp-validation-for="UpdateDate" class="text-danger" ></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -80,3 +88,18 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<script>
+    function ImgPreview(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                let img = document.getElementById('Commodity-preview');
+                img.setAttribute('src', e.target.result);
+
+                document.getElementById('img-name').value = input.files[0].name;
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

@@ -8,10 +8,6 @@
 
 
 @{
-    // if (Model.Commodity1!=null)
-    // {
-    //     <partial name="getproduct.cshtml" model="Model.Commodity1" />
-    // }
     <div>
         <h4>Commodity</h4>
         <hr />
@@ -84,20 +80,30 @@
             </dd>
         </dl>
     </div>
+
+
     if (Model.Commodity2 != null)
     {
-        <partial name="getproduct.cshtml" model="Model.Commodity2" />
+        <partial name="GetProduct.cshtml" model="Model.Commodity2" />
     }
     if (Model.Commodity3 != null)
     {
-        <partial name="getproduct.cshtml" model="Model.Commodity3" />
+        <partial name="GetProduct.cshtml" model="Model.Commodity3" />
     }
     if (Model.Commodity4 != null)
     {
-        <partial name="getproduct.cshtml" model="Model.Commodity4" />
+        <partial name="GetProduct.cshtml" model="Model.Commodity4" />
+    }
+    <hr />
+    if (Model.Commodities.Count() > 0)
+    {
+        <partial name="GetCompareCommoditiesPartial.cshtml" model="Model.Commodities" />
+    }
+    else
+    {
+        <a class="btn btn-danger">محصولاتی از این دسته بندی برای مقایسه وجود ندارد</a>
     }
 }
 
-<partial name="getcommodities.cshtml"  model="Model.Commodities"/>
 
 

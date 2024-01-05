@@ -18,17 +18,16 @@ public class FeatureController : Controller
     {
         #region GetAllFeatures
         //for getting All Features Model
+
         ViewBag.FeatureGroups = (await _feature.GetFeatureGroups()).OrderBy(f => f.GroupName);
         //ViewBag.FeatureSections = (await _feature.GetFeatureSections()).OrderBy(f => f.FeatureGroup.GroupName);
         //ViewBag.Features = (await _feature.GetFeatures()).OrderBy(f => f.FeatureSection.SectionName);
+
         #endregion
 
         return await Task.FromResult(View());
     }
 
-
-
-    //برای این ویو نساختم چون پارشیال گرفتم باید به یه اسم دیگه برای نمودار ویژگی ویو بسازم
     public async Task<IActionResult> FeaturesChart()
     {
         #region FEATURES CHART
@@ -36,6 +35,7 @@ public class FeatureController : Controller
         var featureGroups = (await _feature.GetFeatureGroups()).OrderBy(f => f.GroupName);
         var featureSections = (await _feature.GetFeatureSections()).OrderBy(f => f.FeatureGroup.GroupName);
         var features = (await _feature.GetFeatures()).OrderBy(f => f.FeatureSection.SectionName);
+
         FeaturesChartViewModel featuresChart = new FeaturesChartViewModel()
         {
             FeatureGroups = featureGroups,
@@ -45,18 +45,6 @@ public class FeatureController : Controller
         #endregion
         return await Task.FromResult(View(featuresChart));
     }
-
-    //public async Task<IActionResult> AddAllFeatures()
-    //{
-    //    #region GetAllFeatures
-    //    ViewBag.FeatureGroups = (await _feature.GetFeatureGroups()).OrderBy(f=>f.GroupName);
-    //    ViewBag.FeatureSections = (await _feature.GetFeatureSections()).OrderBy(f=>f.FeatureGroup.GroupName);
-    //    ViewBag.Features = (await _feature.GetFeatures()).OrderBy(f=>f.FeatureSection.SectionName);
-    //    #endregion
-    //    ViewBag.FeatureGroupId = new SelectList((await _feature.GetFeatureGroups()).OrderBy(f=>f.GroupName), "Id", "GroupName");
-    //    ViewBag.FeatureSectionId = new SelectList((await _feature.GetFeatureSections()).OrderBy(f=>f.SectionName), "Id", "SectionName");
-    //    return await Task.FromResult(View());
-    //}
 
     //////////////// FEATURE GROUP START ////////////////
 
@@ -129,7 +117,7 @@ public class FeatureController : Controller
         return RedirectToAction(nameof(GetFeatureGroups));
     }
 
-    public async Task<IActionResult> FeatureGroupDetails(int Id/*, string? GroupName*/)
+    public async Task<IActionResult> FeatureGroupDetails(int Id/*, string? GroupName*/) //Id==FeatureGroupId
     {
         //if (Id != null)
         //{
@@ -154,7 +142,7 @@ public class FeatureController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    public async Task<IActionResult> FeatureGroupDelete(int Id)
+    public async Task<IActionResult> FeatureGroupDelete(int Id) //Id==FeatureGroupId
     {
         var feature = await _feature.GetFeatureGroup(Id);
         if (feature != null)
@@ -223,7 +211,7 @@ public class FeatureController : Controller
         return RedirectToAction(nameof(AddFeatureSection));
     }
 
-    public async Task<IActionResult> EditFeatureSection(int Id)
+    public async Task<IActionResult> EditFeatureSection(int Id)//Id==FeatureSectionId
     {
         var feature = await _feature.GetFeatureSection(Id);
         if (feature != null)
@@ -247,7 +235,7 @@ public class FeatureController : Controller
     }
 
 
-    public async Task<IActionResult> FeatureSectionDetails(int Id)
+    public async Task<IActionResult> FeatureSectionDetails(int Id) //Id==FeatureSectionId
     {
         var feature = await _feature.GetFeatureSection(Id);
         if (feature != null)
@@ -259,7 +247,7 @@ public class FeatureController : Controller
     }
 
 
-    public async Task<IActionResult> FeatureSectionDelete(int Id)
+    public async Task<IActionResult> FeatureSectionDelete(int Id)//Id==FeatureSectionId
     {
         var feature = await _feature.GetFeatureSection(Id);
         if (feature != null)
@@ -321,7 +309,7 @@ public class FeatureController : Controller
         return RedirectToAction(nameof(AddFeature));
     }
 
-    public async Task<IActionResult> EditFeature(int Id)
+    public async Task<IActionResult> EditFeature(int Id) //Id==FeatureId
     {
         var feature = await _feature.GetFeature(Id);
         if (feature != null)
@@ -345,7 +333,7 @@ public class FeatureController : Controller
         return RedirectToAction(nameof(GetFeatures));
     }
 
-    public async Task<IActionResult> FeatureDetails(int Id)
+    public async Task<IActionResult> FeatureDetails(int Id)//Id==FeatureId
     {
         var feature = await _feature.GetFeature(Id);
         if (feature != null)
@@ -357,7 +345,7 @@ public class FeatureController : Controller
     }
 
 
-    public async Task<IActionResult> FeatureDelete(int Id)
+    public async Task<IActionResult> FeatureDelete(int Id)//Id==FeatureId
     {
         var feature = await _feature.GetFeature(Id);
         if (feature != null)

@@ -12,12 +12,14 @@ namespace Shopping.Areas.Admin.Controllers;
 [Area("Admin")]
 public class CommodityController : Controller
 {
-    string imgPath = "wwwroot/Images/Commodity";
+    string CommodityImgPath = "wwwroot/Images/Commodity";
+    string CommodityAlbumImgPath = "wwwroot/Images/Commodity/CommodityAlbum";
+
     ICommodity _commodity;
     IBrand _brand;
     IClassification _classification;
     IFeature _feature;
-    public CommodityController(ICommodity commodity, IBrand brand, IClassification classification,IFeature feature)
+    public CommodityController(ICommodity commodity, IBrand brand, IClassification classification, IFeature feature)
     {
         _commodity = commodity;
         _brand = brand;
@@ -26,9 +28,11 @@ public class CommodityController : Controller
     }
     public async Task<IActionResult> Index()
     {
-        var commodities = (await _commodity.GetCommodities(/*ClassificationId:Guid.Empty,*/)).OrderBy(f=>f.RegisterDate);
+        var commodities = (await _commodity.GetCommodities(/*ClassificationId:Guid.Empty,*/)).OrderBy(f => f.RegisterDate);
         return View(commodities);
     }
+
+
     //public async Task<IActionResult> GetCommodities()
     //{
     //    //var Id1 = TempData["Id1"];
@@ -59,11 +63,11 @@ public class CommodityController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddNewCommodity(Commodity commodity)
+    public async Task<IActionResult> AddNewCommodity(Commodity commodity, IFormFile CommodityImg)
     {
         if (ModelState.IsValid)
         {
-            if (await _commodity.AddCommodity(commodity))
+            if (await _commodity.AddCommodity(commodity, CommodityImg))
             {
                 return RedirectToAction(nameof(Index));
             }
@@ -139,23 +143,23 @@ public class CommodityController : Controller
         var previousimg = (await _commodity.GetCommodityAlbum(commodityAlbum.Id)).CommodityImg;
         if (await _commodity.DeleteCommodityAlbum(commodityAlbum.Id))
         {
-            string ExitingFile = Path.Combine(imgPath, previousimg);
+            string ExitingFile = Path.Combine(CommodityAlbumImgPath, previousimg);
             System.IO.File.Delete(ExitingFile);
 
-            return RedirectToAction(nameof(AddCommodityAlbum), new { id = TempData["CommodityId"] });
+            return RedirectToAction(nameof(AddCommodityAlbum), new { Id = TempData["CommodityId"] });
         }
-        return RedirectToAction(nameof(AddCommodityAlbum), new { id = TempData["CommodityId"] });
+        return RedirectToAction(nameof(AddCommodityAlbum), new { Id = TempData["CommodityId"] });
     }
 
 
-    public async Task<IActionResult> CommodityDetails(Guid Id) //id==commodityId
+    public async Task<IActionResult> CommodityDetails(Guid CommodityId) 
     {
-        var commodity = await _commodity.GetCommodity(Id);
+        var commodity = await _commodity.GetCommodity(CommodityId);
         if (commodity == null)
         {
             return RedirectToAction(nameof(Index));
         }
-        ViewBag.Album = await _commodity.GetCommodityAlbums(Id);
+        ViewBag.Album = await _commodity.GetCommodityAlbums(CommodityId);
         return await Task.FromResult(View(commodity));
     }
 
@@ -163,7 +167,7 @@ public class CommodityController : Controller
     public async Task<IActionResult> DeleteCommodity(Guid Id)
     {
         var commodity = await _commodity.GetCommodity(Id);
-        ViewBag.CommodityAlbum = (await _commodity.GetCommodityAlbums(Id)).Take(4);
+        //ViewBag.CommodityAlbum = (await _commodity.GetCommodityAlbums(Id)).Take(4);
         if (commodity != null)
         {
             return PartialView(commodity);
@@ -187,28 +191,141 @@ public class CommodityController : Controller
         return await Task.FromResult(View(commoDetails));
     }
 
-    public async Task<IActionResult> EditCommodity(Guid Id)//id==commodityId
+
+
+    //public async Task<IActionResult> EditCommodity(Guid Id)//id==commodityId
+    //{
+    //    var commodity = await _commodity.GetCommodity(Id);
+    //    ViewBag.BrandId = new SelectList(await _brand.GetBrands(), "Id", "BrandEnName");
+    //    ViewBag.ClassificationId = new SelectList(await _classification.GetProductClassifications(), "Id", "GroupEnName");
+    //    if (commodity != null)
+    //    {
+    //        return await Task.FromResult(View(commodity));
+    //    }
+    //    return RedirectToAction(nameof(Index));
+    //}
+
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //public async Task<IActionResult> EditCommodity(Commodity commodity)
+    //{
+
+    //    if (ModelState.IsValid)
+    //    {
+    //        if (await _commodity.EditCommodity(commodity))
+    //        {
+    //            return RedirectToAction(nameof(CommodityDetails), new { Id = commodity.Id });
+    //        }
+    //        ViewBag.BrandId = new SelectList(await _brand.GetBrands(), "Id", "BrandEnName");
+    //        ViewBag.ClassificationId = new SelectList(await _classification.GetProductClassifications(), "Id", "GroupEnName");
+    //        return await Task.FromResult(View(commodity));
+    //    }
+    //    ViewBag.BrandId = new SelectList(await _brand.GetBrands(), "Id", "BrandEnName");
+    //    ViewBag.ClassificationId = new SelectList(await _classification.GetProductClassifications(), "Id", "GroupEnName");
+    //    return await Task.FromResult(View(commodity));
+    //}
+
+    //public async Task<IActionResult> EditCommodityImg(Guid CommodityId)
+    //{
+    //    var commodity = await _commodity.GetCommodity(CommodityId);
+    //    if (commodity != null)
+    //    {
+    //        EditCommodityViewModel viewModel = new EditCommodityViewModel()
+    //        {
+    //            Id = commodity.Id,
+    //            BrandId = commodity.BrandId,
+    //            GroupId = commodity.GroupId,
+    //            ProductFaName = commodity.ProductFaName,
+    //            ProductEnName = commodity.ProductEnName,
+    //            ProductImg = commodity.ProductImg,
+    //            Price = commodity.Price,
+    //            Discount = commodity.Discount,
+    //            Inventory = commodity.Inventory,
+    //            Introduction = commodity.Introduction,
+    //            NotShow = commodity.NotShow,
+    //            RegisterDate = commodity.RegisterDate,
+    //            UpdateDate = commodity.UpdateDate,
+    //        };
+
+    //        var previousImg = viewModel.ProductImg;
+    //        TempData["Img"] = previousImg.ToString();
+    //        return await Task.FromResult(View(viewModel));
+    //    }
+    //    return RedirectToAction(nameof(Index));
+    //}
+
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //public async Task<IActionResult> EditCommodityImg(EditCommodityViewModel viewModel, IFormFile CommodityImg)
+    //{
+    //    if (ModelState.IsValid && CommodityImg != null)
+    //    {
+    //        if (await _commodity.EditCommodityImg(viewModel, CommodityImg))
+    //        {
+    //            //for deleting previous image
+    //            var previousimg = (TempData["Img"]).ToString();
+    //            string ExitingFile = Path.Combine(CommodityImgPath, previousimg);
+    //            System.IO.File.Delete(ExitingFile);
+    //            //end deleting previous image
+
+    //            return RedirectToAction(nameof(CommodityDetails), new { id = viewModel.Id });
+    //        }
+    //        return await Task.FromResult(View(viewModel));
+    //    }
+    //    return await Task.FromResult(View(viewModel));
+    //}
+
+
+
+    public async Task<IActionResult> EditCommodity(Guid CommodityId)
     {
-        var commodity = await _commodity.GetCommodity(Id);
+        var commodity = await _commodity.GetCommodity(CommodityId);
         ViewBag.BrandId = new SelectList(await _brand.GetBrands(), "Id", "BrandEnName");
         ViewBag.ClassificationId = new SelectList(await _classification.GetProductClassifications(), "Id", "GroupEnName");
         if (commodity != null)
         {
-            return await Task.FromResult(View(commodity));
+            EditCommodityViewModel viewModel = new EditCommodityViewModel()
+            {
+                Id = commodity.Id,
+                BrandId = commodity.BrandId,
+                GroupId = commodity.GroupId,
+                ProductFaName = commodity.ProductFaName,
+                ProductEnName = commodity.ProductEnName,
+                ProductImg = commodity.ProductImg,
+                Price = commodity.Price,
+                Discount = commodity.Discount,
+                Inventory = commodity.Inventory,
+                Introduction = commodity.Introduction,
+                NotShow = commodity.NotShow,
+                RegisterDate = commodity.RegisterDate,
+                UpdateDate = commodity.UpdateDate,
+            };
+
+            var previousImg = viewModel.ProductImg;
+            TempData["Img"] = previousImg.ToString();
+            return await Task.FromResult(View(viewModel));
         }
         return RedirectToAction(nameof(Index));
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditCommodity(Commodity commodity)
+    public async Task<IActionResult> EditCommodity(EditCommodityViewModel commodity, IFormFile? CommodityImg)
     {
 
         if (ModelState.IsValid)
         {
-            if (await _commodity.EditCommodity(commodity))
+            if (await _commodity.EditCommodity(commodity, CommodityImg))
             {
-                return RedirectToAction(nameof(CommodityDetails), new { Id = commodity.Id });
+                if (CommodityImg != null)
+                {
+                    //for deleting previous image
+                    var previousimg = (TempData["Img"]).ToString();
+                    string ExitingFile = Path.Combine(CommodityImgPath, previousimg);
+                    System.IO.File.Delete(ExitingFile);
+                    //end deleting previous image
+                }
+                return RedirectToAction(nameof(CommodityDetails), new { CommodityId = commodity.Id });
             }
             ViewBag.BrandId = new SelectList(await _brand.GetBrands(), "Id", "BrandEnName");
             ViewBag.ClassificationId = new SelectList(await _classification.GetProductClassifications(), "Id", "GroupEnName");
@@ -218,6 +335,57 @@ public class CommodityController : Controller
         ViewBag.ClassificationId = new SelectList(await _classification.GetProductClassifications(), "Id", "GroupEnName");
         return await Task.FromResult(View(commodity));
     }
+
+
+    //public async Task<IActionResult> EditCommodityImg(Guid CommodityId)
+    //{
+    //    var commodity = await _commodity.GetCommodity(CommodityId);
+    //    if (commodity != null)
+    //    {
+    //        EditCommodityViewModel viewModel = new EditCommodityViewModel()
+    //        {
+    //            Id = commodity.Id,
+    //            BrandId = commodity.BrandId,
+    //            GroupId = commodity.GroupId,
+    //            ProductFaName = commodity.ProductFaName,
+    //            ProductEnName = commodity.ProductEnName,
+    //            ProductImg = commodity.ProductImg,
+    //            Price = commodity.Price,
+    //            Discount = commodity.Discount,
+    //            Inventory = commodity.Inventory,
+    //            Introduction = commodity.Introduction,
+    //            NotShow = commodity.NotShow,
+    //            RegisterDate = commodity.RegisterDate,
+    //            UpdateDate = commodity.UpdateDate,
+    //        };
+
+    //        var previousImg = viewModel.ProductImg;
+    //        TempData["Img"] = previousImg.ToString();
+    //        return await Task.FromResult(View(viewModel));
+    //    }
+    //    return RedirectToAction(nameof(Index));
+    //}
+
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //public async Task<IActionResult> EditCommodityImg(EditCommodityViewModel viewModel, IFormFile CommodityImg)
+    //{
+    //    if (ModelState.IsValid && CommodityImg != null)
+    //    {
+    //        if (await _commodity.EditCommodityImg(viewModel, CommodityImg))
+    //        {
+    //            //for deleting previous image
+    //            var previousimg = (TempData["Img"]).ToString();
+    //            string ExitingFile = Path.Combine(CommodityImgPath, previousimg);
+    //            System.IO.File.Delete(ExitingFile);
+    //            //end deleting previous image
+
+    //            return RedirectToAction(nameof(CommodityDetails), new { id = viewModel.Id });
+    //        }
+    //        return await Task.FromResult(View(viewModel));
+    //    }
+    //    return await Task.FromResult(View(viewModel));
+    //}
 
     public async Task<IActionResult> CompareCommodities(Guid Id1, Guid? Id2, Guid? Id3, Guid? Id4, Guid? DeleteId)
     {
@@ -302,30 +470,60 @@ public class CommodityController : Controller
         return await Task.FromResult(View(compareView));
     }
 
-    public async Task<List<FeatureGroup>> GetFeatureGroup()
-    {
-        var featureGroups = await _feature.GetFeatureGroups();
-        return featureGroups;
-    }
+
+    //public async Task<IActionResult> CompareCommodities(List<Guid>? Id)
+    //{
+    //    TempData["Ids"] = Id;
+    //    var AllCommodities=await _commodity.GetCommodities();
+    //    var commodities = new List<Commodity>();
+    //    foreach (var item in Id)
+    //    {
+    //        var commodity = await _commodity.GetCommodity(item);
+    //        commodities.Add(commodity);
+    //    }
+
+    //    CompareViewModel compareView = new CompareViewModel()
+    //    {
+    //        CompareCommodities = commodities,
+    //        Commodities = AllCommodities,
+    //    };
+    //    return await Task.FromResult(View(compareView));
+    //}
+
+
 
     public async Task<IActionResult> CreateCommodityFeature(Guid CommodityId)
     {
         var commodity = await _commodity.GetCommodity(CommodityId);
-        var commodityAlbum = await _commodity.GetCommodityAlbums(commodity.Id);
+        var commodityAlbum = await _commodity.GetCommodityAlbums(CommodityId);
+
+        if (commodity != null)
+        {
+            ViewBag.CommodityDetail = commodity;
+        }
         if (commodityAlbum != null)
         {
             ViewBag.Album = commodityAlbum;
         }
-        var featureGroups = await _feature.GetFeatureGroups();
-        var featureSections=await _feature.GetFeatureSections();
-        var features=await _feature.GetFeatures();
-        ViewBag.Commodity = commodity;
-        ViewBag.Id=Guid.NewGuid();
+
+        //var featureGroups = await _feature.GetFeatureGroups();
+        //var featureSections = await _feature.GetFeatureSections();
+        //var features = await _feature.GetFeatures();
+
+
+        ViewBag.Id = Guid.NewGuid();
         ViewBag.FeatureGroups = new SelectList(await _feature.GetFeatureGroups(), "Id", "GroupName");
         ViewBag.FeatureSections = new SelectList(await _feature.GetFeatureSections(), "Id", "SectionName");
         ViewBag.FeatureId = new SelectList(await _feature.GetFeatures(), "Id", "Title");
         return await Task.FromResult(View());
 
+    }
+
+
+    public async Task<List<FeatureGroup>> GetFeatureGroup()
+    {
+        var featureGroups = await _feature.GetFeatureGroups();
+        return featureGroups;
     }
 
     //public async Task<IActionResult> CompareCommodities(Guid ? FId, Guid? SId)//Id==Commodityid

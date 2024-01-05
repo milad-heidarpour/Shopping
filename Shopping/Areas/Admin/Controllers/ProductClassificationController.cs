@@ -49,10 +49,10 @@ public class ProductClassificationController : Controller
         return await Task.FromResult(View(classification));
     }
 
-    public async Task<IActionResult> ClassificationDetails(Guid Id)//id= classificationId
+    public async Task<IActionResult> ClassificationDetails(Guid ClassificationId)//id= classificationId
     {
-        var classification = await _classification.GetProductClassification(Id);
-        ViewBag.RelatedCommodity = (await _commodity.GetClassificationCommodities(Id)).Take(5)/*.OrderByDescending(c=>c.RegisterDate)*/;  
+        var classification = await _classification.GetProductClassification(ClassificationId);
+        ViewBag.RelatedCommodity = (await _commodity.GetClassificationCommodities(ClassificationId)).Take(5)/*.OrderByDescending(c=>c.RegisterDate)*/;  
         //به ترتیب جدید ترین ها محصول ها را گرفتم
         //اینجا باید مثلا 5 تا محصول بفرستم که دکمه نمایش بیشتر رو دز بره اون محصولایی که تو این دسته بندی هستن رو نمایش بده
         //بعد باید همه محصولات رئ نشون بدم اونایی که عدم نمایش هستن رو روش قرمز بنویسم نه عدم نمایش 
@@ -60,10 +60,13 @@ public class ProductClassificationController : Controller
         return await Task.FromResult(View(classification));
     }
 
-    public async Task<IActionResult> EditClassificationTitle(Guid Id)//id==classificationId 
+
+
+
+    public async Task<IActionResult> EditClassification(Guid ClassificationId)//id=brandId
     {
-        var classification=await _classification.GetProductClassification(Id);
-        if (classification!=null)
+        var classification = await _classification.GetProductClassification(ClassificationId);
+        if (classification != null)
         {
             EditClassificationViewModel viewModel = new EditClassificationViewModel()
             {
@@ -74,71 +77,117 @@ public class ProductClassificationController : Controller
                 GroupDes = classification.GroupDes,
                 NotShow = classification.NotShow,
             };
-            return await Task.FromResult(View(viewModel));
-        }
-        return RedirectToAction(nameof(Index));
-
-    }
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditClassificationTitle(EditClassificationViewModel viewModel)
-    {
-        if (ModelState.IsValid)
-        {
-            if (await _classification.EditClassification(viewModel))
-            {
-                return RedirectToAction(nameof(ClassificationDetails), new { Id = viewModel.Id });
-            }
-            return await Task.FromResult( View(viewModel));
-        }
-        return await Task.FromResult(View(viewModel));
-    }
-
-
-    public async Task<IActionResult> EditClassificationImg(Guid Id)//id==classificationId 
-    {
-        var classification = await _classification.GetProductClassification(Id);
-        if (classification!=null) 
-        {
-            EditClassificationViewModel viewModel = new EditClassificationViewModel()
-            {
-                Id = classification.Id,
-                GroupEnName = classification.GroupEnName,
-                GroupFaName = classification.GroupFaName,
-                GroupImg = classification.GroupImg,
-                GroupDes = classification.GroupDes,
-                NotShow = classification.NotShow,
-            };
-
             var previousImg = viewModel.GroupImg;
             TempData["Img"] = previousImg.ToString();
             return await Task.FromResult(View(viewModel));
         }
         return RedirectToAction(nameof(Index));
-        
     }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditClassificationImg(EditClassificationViewModel viewModel,IFormFile ClassificationImg)
+    public async Task<IActionResult> EditClassification(EditClassificationViewModel classification, IFormFile? File)
     {
         if (ModelState.IsValid)
         {
-            if (await _classification.EditClassificationImg(viewModel,ClassificationImg))
+            if (await _classification.EditClassification(classification, File))
             {
-                //for deleting previous image
-                var previousimg = (TempData["Img"]).ToString();
-                string ExitingFile = Path.Combine(imgPath, previousimg);
-                System.IO.File.Delete(ExitingFile);
-                //end deleting previous image
-
-                ViewBag.RelatedCommodity = (await _commodity.GetClassificationCommodities(viewModel.Id)).Take(5);
-                return RedirectToAction(nameof(ClassificationDetails), new { Id = viewModel.Id });
+                if (File != null)
+                {
+                    //for deleting previous image
+                    var previousimg = (TempData["Img"]).ToString();
+                    string ExitingFile = Path.Combine(imgPath, previousimg);
+                    System.IO.File.Delete(ExitingFile);
+                    //end deleting previous image
+                }
+                return RedirectToAction(nameof(ClassificationDetails), new { ClassificationId = classification.Id });
             }
-            return await Task.FromResult(View(viewModel));
         }
-        ModelState.AddModelError("GroupEnName", " ویرایش امکان پذیر نمی باشد");
-        return await Task.FromResult(View(viewModel));
+        return await Task.FromResult(View(classification));
     }
+
+
+
+
+    //public async Task<IActionResult> EditClassificationTitle(Guid Id)//id==classificationId 
+    //{
+    //    var classification=await _classification.GetProductClassification(Id);
+    //    if (classification!=null)
+    //    {
+    //        EditClassificationViewModel viewModel = new EditClassificationViewModel()
+    //        {
+    //            Id = classification.Id,
+    //            GroupEnName = classification.GroupEnName,
+    //            GroupFaName = classification.GroupFaName,
+    //            GroupImg = classification.GroupImg,
+    //            GroupDes = classification.GroupDes,
+    //            NotShow = classification.NotShow,
+    //        };
+    //        return await Task.FromResult(View(viewModel));
+    //    }
+    //    return RedirectToAction(nameof(Index));
+
+    //}
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //public async Task<IActionResult> EditClassificationTitle(EditClassificationViewModel viewModel)
+    //{
+    //    if (ModelState.IsValid)
+    //    {
+    //        if (await _classification.EditClassification(viewModel))
+    //        {
+    //            return RedirectToAction(nameof(ClassificationDetails), new { Id = viewModel.Id });
+    //        }
+    //        return await Task.FromResult( View(viewModel));
+    //    }
+    //    return await Task.FromResult(View(viewModel));
+    //}
+
+
+    //public async Task<IActionResult> EditClassificationImg(Guid Id)//id==classificationId 
+    //{
+    //    var classification = await _classification.GetProductClassification(Id);
+    //    if (classification!=null) 
+    //    {
+    //        EditClassificationViewModel viewModel = new EditClassificationViewModel()
+    //        {
+    //            Id = classification.Id,
+    //            GroupEnName = classification.GroupEnName,
+    //            GroupFaName = classification.GroupFaName,
+    //            GroupImg = classification.GroupImg,
+    //            GroupDes = classification.GroupDes,
+    //            NotShow = classification.NotShow,
+    //        };
+
+    //        var previousImg = viewModel.GroupImg;
+    //        TempData["Img"] = previousImg.ToString();
+    //        return await Task.FromResult(View(viewModel));
+    //    }
+    //    return RedirectToAction(nameof(Index));
+
+    //}
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //public async Task<IActionResult> EditClassificationImg(EditClassificationViewModel viewModel,IFormFile ClassificationImg)
+    //{
+    //    if (ModelState.IsValid)
+    //    {
+    //        if (await _classification.EditClassificationImg(viewModel,ClassificationImg))
+    //        {
+    //            //for deleting previous image
+    //            var previousimg = (TempData["Img"]).ToString();
+    //            string ExitingFile = Path.Combine(imgPath, previousimg);
+    //            System.IO.File.Delete(ExitingFile);
+    //            //end deleting previous image
+
+    //            ViewBag.RelatedCommodity = (await _commodity.GetClassificationCommodities(viewModel.Id)).Take(5);
+    //            return RedirectToAction(nameof(ClassificationDetails), new { Id = viewModel.Id });
+    //        }
+    //        return await Task.FromResult(View(viewModel));
+    //    }
+    //    ModelState.AddModelError("GroupEnName", " ویرایش امکان پذیر نمی باشد");
+    //    return await Task.FromResult(View(viewModel));
+    //}
 
 
     public async Task<IActionResult> DeleteClassification(Guid Id)

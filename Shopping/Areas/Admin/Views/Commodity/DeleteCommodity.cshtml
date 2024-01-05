@@ -1,21 +1,7 @@
 ﻿@model Shopping.Database.Model.Commodity
 
 <div>
-    @{
-        if (Model.CommodityAlbums.Count()==0)
-        {
-            <h5 class="text-danger text-center"><span class=" fa fa-times"></span> عکسی برای محصول وجود ندارد <span class=" fa fa-times"></span></h5>
-        }
-        else
-        {
-            foreach (var item in ViewBag.CommodityAlbum)
-            {
-                <img src="~/Images/commodity/@item.CommodityImg" width="113" />
-            }
-        }
-       
-    }
-    
+    <img src="~/Images/commodity/@Model.ProductImg" width="113" />
     <h6>ProductName : @Model.ProductEnName</h6>
     <h6>نام کالا : @Model.ProductFaName</h6>
     <hr />

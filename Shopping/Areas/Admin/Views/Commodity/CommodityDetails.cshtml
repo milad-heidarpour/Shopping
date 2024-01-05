@@ -24,6 +24,12 @@
             @Html.DisplayFor(model => model.ProductEnName)
         </dd>
         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ProductImg)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="~/Images/Commodity/@Model.ProductImg" width="150" />
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Price)
         </dt>
         <dd class="col-sm-10">
@@ -64,7 +70,7 @@
         </dt>
         <dd class="col-sm-10">
             @{
-                if (Model.UpdateDate!=null)
+                if (Model.UpdateDate != null)
                 {
                     @Html.DisplayFor(model => model.UpdateDate)
                 }
@@ -73,7 +79,7 @@
                     <h6 class="text-danger">محصول فعلا بروزرسانی نشده است</h6>
                 }
             }
-            
+
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Brand)
@@ -91,8 +97,16 @@
         </dd>
     </dl>
 </div>
-
-<partial name="CommodityAlbumDetailsPartial.cshtml" model="@ViewBag.Album" />
+@{
+    if (ViewBag.Album != null)
+    {
+        <partial name="ShowAlbumsPartial.cshtml" model="@ViewBag.Album" />
+    }
+    else
+    {
+        <h1 class="text-danger">عکسی برای این محصول وجود ندارد</h1>
+    }
+}
 
 <div>
     <a asp-area="admin" asp-controller="commodity" asp-action="EditCommodity" asp-route-id="@Model?.Id">Edit</a> |

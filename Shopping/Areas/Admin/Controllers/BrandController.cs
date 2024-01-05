@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Shopping.Core.Interface;
 using Shopping.Core.ViewModels;
 using Shopping.Database.Model;
@@ -18,7 +19,7 @@ public class BrandController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var brands = (await _brand.GetBrands()).OrderBy(f=>f.BrandEnName);
+        var brands = (await _brand.GetBrands()).OrderBy(f => f.BrandEnName);
         return View(brands);
     }
 
@@ -45,9 +46,9 @@ public class BrandController : Controller
         return await Task.FromResult(View(brand));
     }
 
-    public async Task<IActionResult> BrandDetails(Guid Id)//id=brandId
+    public async Task<IActionResult> BrandDetails(Guid BrandId)//id=brandId
     {
-        var brand = await _brand.GetBrand(Id);
+        var brand = await _brand.GetBrand(BrandId);
         if (brand != null)
         {
             return await Task.FromResult(View(brand));
@@ -55,9 +56,10 @@ public class BrandController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    public async Task<IActionResult> EditBrandTitel(Guid Id)//id=brandId
+
+    public async Task<IActionResult> EditBrand(Guid BrandId)//id=brandId
     {
-        var brand = await _brand.GetBrand(Id);
+        var brand = await _brand.GetBrand(BrandId);
         if (brand != null)
         {
             EditBrandViewModel viewModel = new EditBrandViewModel()
@@ -69,42 +71,6 @@ public class BrandController : Controller
                 BrandImg = brand.BrandImg,
                 NotShow = brand.NotShow,
             };
-            return await Task.FromResult(View(viewModel));
-        }
-        return RedirectToAction(nameof(Index));
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditBrandTitel(EditBrandViewModel viewModel)
-    {
-        if (ModelState.IsValid)
-        {
-            if (await _brand.EditBrand(viewModel))
-            {
-                return RedirectToAction(nameof(BrandDetails), new { id = viewModel.Id });
-            }
-            return await Task.FromResult(View(viewModel));
-        }
-        return await Task.FromResult(View(viewModel));
-    }
-
-
-    public async Task<IActionResult> EditBrandImg(Guid Id)//id=brandId
-    {
-        var brand = await _brand.GetBrand(Id);
-        if (brand != null)
-        {
-            EditBrandViewModel viewModel = new EditBrandViewModel()
-            {
-                Id = brand.Id,
-                BrandEnName = brand.BrandEnName,
-                BrandFaName = brand.BrandFaName,
-                BrandDes = brand.BrandDes,
-                BrandImg = brand.BrandImg,
-                NotShow = brand.NotShow,
-            };
-
             var previousImg = viewModel.BrandImg;
             TempData["Img"] = previousImg.ToString();
             return await Task.FromResult(View(viewModel));
@@ -114,24 +80,110 @@ public class BrandController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditBrandImg(EditBrandViewModel viewModel, IFormFile BrandImg)
+    public async Task<IActionResult> EditBrand(EditBrandViewModel brand, IFormFile? File)
     {
-        if (ModelState.IsValid && BrandImg != null)
+        if (ModelState.IsValid)
         {
-            if (await _brand.EditBrandImg(viewModel, BrandImg))
+            if (await _brand.EditBrand(brand, File))
             {
-                //for deleting previous image
-                var previousimg = (TempData["Img"]).ToString();
-                string ExitingFile = Path.Combine(imgPath, previousimg);
-                System.IO.File.Delete(ExitingFile);
-                //end deleting previous image
-
-                return RedirectToAction(nameof(BrandDetails), new { id = viewModel.Id });
+                if (File != null)
+                {
+                    //for deleting previous image
+                    var previousimg = (TempData["Img"]).ToString();
+                    string ExitingFile = Path.Combine(imgPath, previousimg);
+                    System.IO.File.Delete(ExitingFile);
+                    //end deleting previous image
+                }
+                return RedirectToAction(nameof(BrandDetails), new { BrandId = brand.Id });
             }
-            return await Task.FromResult(View(viewModel));
         }
-        return await Task.FromResult(View(viewModel));
+        return await Task.FromResult(View(brand));
     }
+
+
+
+    //public async Task<IActionResult> EditBrandTitel(Guid Id)//id=brandId
+    //{
+    //    var brand = await _brand.GetBrand(Id);
+    //    if (brand != null)
+    //    {
+    //        EditBrandViewModel viewModel = new EditBrandViewModel()
+    //        {
+    //            Id = brand.Id,
+    //            BrandEnName = brand.BrandEnName,
+    //            BrandFaName = brand.BrandFaName,
+    //            BrandDes = brand.BrandDes,
+    //            BrandImg = brand.BrandImg,
+    //            NotShow = brand.NotShow,
+    //        };
+    //        return await Task.FromResult(View(viewModel));
+    //    }
+    //    return RedirectToAction(nameof(Index));
+    //}
+
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //public async Task<IActionResult> EditBrandTitel(EditBrandViewModel viewModel)
+    //{
+    //    if (ModelState.IsValid)
+    //    {
+    //        if (await _brand.EditBrand(viewModel))
+    //        {
+    //            return RedirectToAction(nameof(BrandDetails), new { id = viewModel.Id });
+    //        }
+    //        return await Task.FromResult(View(viewModel));
+    //    }
+    //    return await Task.FromResult(View(viewModel));
+    //}
+
+
+
+
+
+
+
+    //public async Task<IActionResult> EditBrandImg(Guid Id)//id=brandId
+    //{
+    //    var brand = await _brand.GetBrand(Id);
+    //    if (brand != null)
+    //    {
+    //        EditBrandViewModel viewModel = new EditBrandViewModel()
+    //        {
+    //            Id = brand.Id,
+    //            BrandEnName = brand.BrandEnName,
+    //            BrandFaName = brand.BrandFaName,
+    //            BrandDes = brand.BrandDes,
+    //            BrandImg = brand.BrandImg,
+    //            NotShow = brand.NotShow,
+    //        };
+
+    //        var previousImg = viewModel.BrandImg;
+    //        TempData["Img"] = previousImg.ToString();
+    //        return await Task.FromResult(View(viewModel));
+    //    }
+    //    return RedirectToAction(nameof(Index));
+    //}
+
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //public async Task<IActionResult> EditBrandImg(EditBrandViewModel viewModel, IFormFile BrandImg)
+    //{
+    //    if (ModelState.IsValid && BrandImg != null)
+    //    {
+    //        if (await _brand.EditBrandImg(viewModel, BrandImg))
+    //        {
+    //            //for deleting previous image
+    //            var previousimg = (TempData["Img"]).ToString();
+    //            string ExitingFile = Path.Combine(imgPath, previousimg);
+    //            System.IO.File.Delete(ExitingFile);
+    //            //end deleting previous image
+
+    //            return RedirectToAction(nameof(BrandDetails), new { id = viewModel.Id });
+    //        }
+    //        return await Task.FromResult(View(viewModel));
+    //    }
+    //    return await Task.FromResult(View(viewModel));
+    //}
 
     public async Task<IActionResult> DeleteBrand(Guid Id)//id==brandId
     {

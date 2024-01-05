@@ -28,7 +28,12 @@ public class Commodity
 
     [Required(ErrorMessage = "درج نام کالا (انگلیسی) الزامی است")]
     [Display(Name = "نام کالا")]
-    public string? ProductEnName { get; set; }
+    public string ProductEnName { get; set; }
+
+
+    [Required(ErrorMessage = "درج تصویر محصول الزامی است")]
+    [Display(Name = "تصویر کالا")]
+    public string ProductImg { get; set; }
 
 
     [Display(Name = "قیمت کالا")]

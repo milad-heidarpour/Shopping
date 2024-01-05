@@ -69,72 +69,6 @@ public class ClassificationService : IClassification
         return await Task.FromResult(classification);
     }
 
-    public async Task<bool> EditClassification(EditClassificationViewModel viewModel)
-    {
-        try
-        {
-            ProductClassification classification = new ProductClassification()
-            {
-                Id = viewModel.Id,
-                GroupEnName = viewModel.GroupEnName,
-                GroupFaName = viewModel.GroupFaName,
-                GroupImg = viewModel.GroupImg,
-                GroupDes = viewModel.GroupDes,
-                NotShow = viewModel.NotShow,
-            };
-            _context.Update(classification);
-            await _context.SaveChangesAsync();
-            return await Task.FromResult(true);
-        }
-        catch (Exception)
-        {
-            return await Task.FromResult(false);
-            //throw;
-        }
-    }
-
-    public async Task<bool> EditClassificationImg(EditClassificationViewModel viewModel, IFormFile file)
-    {
-        try
-        {
-            int imgCode = new Random().Next(10000, 1000000);
-            string imgName = imgCode + file.FileName;
-
-            if (!Directory.Exists(imgPath))
-                Directory.CreateDirectory(imgPath);
-            string savePath = Path.Combine(imgPath, imgName);
-
-            using (Stream Stream = new FileStream(savePath, FileMode.Create))
-            {
-                await file.CopyToAsync(Stream);
-            }
-
-            viewModel.GroupImg = imgName;
-
-            // add product to database(products table)
-
-            ProductClassification classification = new ProductClassification()
-            {
-                Id = viewModel.Id,
-                GroupEnName = viewModel.GroupEnName,
-                GroupFaName = viewModel.GroupFaName,
-                GroupImg = viewModel.GroupImg,
-                GroupDes = viewModel.GroupDes,
-                NotShow = viewModel.NotShow,
-            };
-
-            _context.ProductClassifications.Update(classification);
-            await _context.SaveChangesAsync();
-            return await Task.FromResult(true);
-        }
-        catch (Exception)
-        {
-            return await Task.FromResult(false);
-            //throw;
-        }
-
-    }
-
     public async Task<bool> DeleteClassification(Guid classificationId)
     {
         try
@@ -155,4 +89,120 @@ public class ClassificationService : IClassification
             //throw;
         }
     }
+
+    public async Task<bool> EditClassification(EditClassificationViewModel classification, IFormFile? ClassificationImg)
+    {
+        try
+        {
+            if (ClassificationImg != null)
+            {
+                int imgCode = new Random().Next(10000, 1000000);
+                string imgName = imgCode + ClassificationImg.FileName;
+
+                if (!Directory.Exists(imgPath))
+                    Directory.CreateDirectory(imgPath);
+                string savePath = Path.Combine(imgPath, imgName);
+
+                using (Stream Stream = new FileStream(savePath, FileMode.Create))
+                {
+                    await ClassificationImg.CopyToAsync(Stream);
+                }
+
+                classification.GroupImg = imgName;
+
+            }
+
+            // add product to database(products table)
+
+            ProductClassification Classification = new ProductClassification()
+            {
+                Id = classification.Id,
+                GroupEnName = classification.GroupEnName,
+                GroupFaName = classification.GroupFaName,
+                GroupImg=classification.GroupImg,
+                GroupDes=classification.GroupDes,
+                NotShow=classification.NotShow,
+            };
+
+            _context.ProductClassifications.Update(Classification);
+            await _context.SaveChangesAsync();
+            return await Task.FromResult(true);
+        }
+        catch (Exception)
+        {
+            return await Task.FromResult(true);
+            //throw;
+        }
+    }
+
+
+    #region Not Working For Edit Classification
+
+    //public async Task<bool> EditClassification(EditClassificationViewModel viewModel)
+    //{
+    //    try
+    //    {
+    //        ProductClassification classification = new ProductClassification()
+    //        {
+    //            Id = viewModel.Id,
+    //            GroupEnName = viewModel.GroupEnName,
+    //            GroupFaName = viewModel.GroupFaName,
+    //            GroupImg = viewModel.GroupImg,
+    //            GroupDes = viewModel.GroupDes,
+    //            NotShow = viewModel.NotShow,
+    //        };
+    //        _context.Update(classification);
+    //        await _context.SaveChangesAsync();
+    //        return await Task.FromResult(true);
+    //    }
+    //    catch (Exception)
+    //    {
+    //        return await Task.FromResult(false);
+    //        //throw;
+    //    }
+    //}
+
+    //public async Task<bool> EditClassificationImg(EditClassificationViewModel viewModel, IFormFile file)
+    //{
+    //    try
+    //    {
+    //        int imgCode = new Random().Next(10000, 1000000);
+    //        string imgName = imgCode + file.FileName;
+
+    //        if (!Directory.Exists(imgPath))
+    //            Directory.CreateDirectory(imgPath);
+    //        string savePath = Path.Combine(imgPath, imgName);
+
+    //        using (Stream Stream = new FileStream(savePath, FileMode.Create))
+    //        {
+    //            await file.CopyToAsync(Stream);
+    //        }
+
+    //        viewModel.GroupImg = imgName;
+
+    //        // add product to database(products table)
+
+    //        ProductClassification classification = new ProductClassification()
+    //        {
+    //            Id = viewModel.Id,
+    //            GroupEnName = viewModel.GroupEnName,
+    //            GroupFaName = viewModel.GroupFaName,
+    //            GroupImg = viewModel.GroupImg,
+    //            GroupDes = viewModel.GroupDes,
+    //            NotShow = viewModel.NotShow,
+    //        };
+
+    //        _context.ProductClassifications.Update(classification);
+    //        await _context.SaveChangesAsync();
+    //        return await Task.FromResult(true);
+    //    }
+    //    catch (Exception)
+    //    {
+    //        return await Task.FromResult(false);
+    //        //throw;
+    //    }
+
+    //}
+
+    #endregion
 }

@@ -18,7 +18,7 @@ public class EditBrandViewModel
     public string? BrandDes { get; set; }
 
     [Display(Name = "تصویر برند")]
-    public string? BrandImg { get; set; }
+    public string BrandImg { get; set; }
 
     [Display(Name = "عدم نمایش")]
     public bool NotShow { get; set; } = false;

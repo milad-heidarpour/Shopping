@@ -1,52 +1,45 @@
 ﻿@model IEnumerable<Shopping.Database.Model.CommodityAlbum>
 
 @{
-    if (Model.Count() == 0)
-    {
-        <h1 class="text-danger">عکسی برای این محصول وجود ندارد</h1>
-    }
-    else
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    @* <th>
+    <table class="table">
+        <thead>
+            <tr>
+                @* <th>
             @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
             @Html.DisplayNameFor(model => model.CommodityId)
             </th> *@
-                    <th>
-                        @Html.DisplayNameFor(model => model.CommodityImg)
-                    </th>
-                    @* <th></th>*@
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        @*  <td>
+                <th>
+                    @Html.DisplayNameFor(model => model.CommodityImg)
+                </th>
+                @* <th></th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @*  <td>
             @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
             @Html.DisplayFor(modelItem => item.CommodityId)
             </td> *@
-                        <td>
-                            @* @Html.DisplayFor(modelItem => item.CommodityImg) *@
-                            <img src="~/Images/commodity/@item.CommodityImg " width="210">
-                        </td>
+                    <td>
+                        @* @Html.DisplayFor(modelItem => item.CommodityImg) *@
+                        <img src="~/Images/Commodity/CommodityAlbum/@item.CommodityImg " width="210">
+                    </td>
 
-                        <td>
-                            @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@
-                            @* <a asp-action="RemoveCommodityAlbum" asp-route-id="@item.Id">Delete</a>*@
-                            <a data-bs-toggle="modal" data-bs-target="#exampleModal1" onclick="DeleteImg('@(item.Id)')" class="btn btn-danger"><span class="fa fa-trash-o"></span></a> |
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
+                    <td>
+                        @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@
+                        @* <a asp-action="RemoveCommodityAlbum" asp-route-id="@item.Id">Delete</a>*@
+                        <a data-bs-toggle="modal" data-bs-target="#exampleModal1" onclick="DeleteImg('@(item.Id)')" class="btn btn-danger"><span class="fa fa-trash-o"></span></a> |
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

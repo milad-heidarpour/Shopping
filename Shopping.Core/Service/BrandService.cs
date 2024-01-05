@@ -70,61 +70,38 @@ public class BrandService : IBrand
         }
     }
 
-
-    public async Task<bool> EditBrand(EditBrandViewModel viewModel)
+    public async Task<bool> EditBrand(EditBrandViewModel Brand, IFormFile? BrandImg)
     {
         try
         {
-            Brand brand = new Brand()
+            if (BrandImg != null)
             {
-                Id = viewModel.Id,
-                BrandEnName = viewModel.BrandEnName,
-                BrandFaName = viewModel.BrandFaName,
-                BrandDes = viewModel.BrandDes,
-                BrandImg = viewModel.BrandImg,
-                NotShow = viewModel.NotShow,
-            };
+                int imgCode = new Random().Next(10000, 1000000);
+                string imgName = imgCode + BrandImg.FileName;
 
-            _context.Brands.Update(brand);
-            await _context.SaveChangesAsync();
-            return await Task.FromResult(true);
-        }
-        catch (Exception)
-        {
-            return await Task.FromResult(false);
-            //throw;
-        }
+                if (!Directory.Exists(imgPath))
+                    Directory.CreateDirectory(imgPath);
+                string savePath = Path.Combine(imgPath, imgName);
 
-    }
+                using (Stream Stream = new FileStream(savePath, FileMode.Create))
+                {
+                    await BrandImg.CopyToAsync(Stream);
+                }
 
-    public async Task<bool> EditBrandImg(EditBrandViewModel viewModel, IFormFile file)
-    {
-        try
-        {
-            int imgCode = new Random().Next(10000, 1000000);
-            string imgName = imgCode + file.FileName;
+                Brand.BrandImg = imgName;
 
-            if (!Directory.Exists(imgPath))
-                Directory.CreateDirectory(imgPath);
-            string savePath = Path.Combine(imgPath, imgName);
-
-            using (Stream Stream = new FileStream(savePath, FileMode.Create))
-            {
-                await file.CopyToAsync(Stream);
             }
-
-            viewModel.BrandImg = imgName;
 
             // add product to database(products table)
 
             Brand brand = new Brand()
             {
-                Id = viewModel.Id,
-                BrandEnName = viewModel.BrandEnName,
-                BrandFaName = viewModel.BrandFaName,
-                BrandDes = viewModel.BrandDes,
-                BrandImg = viewModel.BrandImg,
-                NotShow = viewModel.NotShow,
+                Id = Brand.Id,
+                BrandEnName = Brand.BrandEnName,
+                BrandFaName = Brand.BrandFaName,
+                BrandDes = Brand.BrandDes,
+                BrandImg = Brand.BrandImg,
+                NotShow = Brand.NotShow,
             };
 
             _context.Brands.Update(brand);
@@ -137,6 +114,7 @@ public class BrandService : IBrand
             //throw;
         }
     }
+
 
     public async Task<bool> DeleteBrand(Guid brandId)
     {
@@ -157,4 +135,75 @@ public class BrandService : IBrand
             //throw;
         }
     }
+
+
+    #region Not Working For Edit Brand 
+
+    //public async Task<bool> EditBrand(EditBrandViewModel viewModel)
+    //{
+    //    try
+    //    {
+    //        Brand brand = new Brand()
+    //        {
+    //            Id = viewModel.Id,
+    //            BrandEnName = viewModel.BrandEnName,
+    //            BrandFaName = viewModel.BrandFaName,
+    //            BrandDes = viewModel.BrandDes,
+    //            BrandImg = viewModel.BrandImg,
+    //            NotShow = viewModel.NotShow,
+    //        };
+
+    //        _context.Brands.Update(brand);
+    //        await _context.SaveChangesAsync();
+    //        return await Task.FromResult(true);
+    //    }
+    //    catch (Exception)
+    //    {
+    //        return await Task.FromResult(false);
+    //        //throw;
+    //    }
+
+    //}
+
+    //public async Task<bool> EditBrandImg(EditBrandViewModel viewModel, IFormFile file)
+    //{
+    //    try
+    //    {
+    //        int imgCode = new Random().Next(10000, 1000000);
+    //        string imgName = imgCode + file.FileName;
+
+    //        if (!Directory.Exists(imgPath))
+    //            Directory.CreateDirectory(imgPath);
+    //        string savePath = Path.Combine(imgPath, imgName);
+
+    //        using (Stream Stream = new FileStream(savePath, FileMode.Create))
+    //        {
+    //            await file.CopyToAsync(Stream);
+    //        }
+
+    //        viewModel.BrandImg = imgName;
+
+    //        // add product to database(products table)
+
+    //        Brand brand = new Brand()
+    //        {
+    //            Id = viewModel.Id,
+    //            BrandEnName = viewModel.BrandEnName,
+    //            BrandFaName = viewModel.BrandFaName,
+    //            BrandDes = viewModel.BrandDes,
+    //            BrandImg = viewModel.BrandImg,
+    //            NotShow = viewModel.NotShow,
+    //        };
+
+    //        _context.Brands.Update(brand);
+    //        await _context.SaveChangesAsync();
+    //        return await Task.FromResult(true);
+    //    }
+    //    catch (Exception)
+    //    {
+    //        return await Task.FromResult(true);
+    //        //throw;
+    //    }
+    //}
+    #endregion
 }
